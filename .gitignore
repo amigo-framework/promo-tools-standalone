@@ -1,0 +1,14 @@
+dist/components/FreeBetsPopup.svelte.d.ts
+dist/components/PrizeDropPopup.svelte.d.ts
+dist/components/TournamentPopup.svelte.d.ts
+dist/index.d.ts
+dist/interfaces/IPromoTool.d.ts
+dist/promo-tools.es.js
+dist/promo-tools.umd.js
+dist/shared/PopupBuilder.d.ts
+dist/shared/SvelteAnimations.d.ts
+dist/shared/SvelteComponents.d.ts
+dist/style.css
+dist/tools/FreeBetsTool.d.ts
+dist/tools/PrizeDropTool.d.ts
+dist/tools/TournamentTool.d.ts

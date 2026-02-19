@@ -1,0 +1,49 @@
+{
+  "name": "@slotify/promo-tools-standalone",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Standalone promo tools with Svelte for connector integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "vite --port 4001 --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "build:dev": "tsc && vite build --mode development",
+    "build:watch": "vite build --watch",
+    "preview": "vite preview",
+    "type-check": "svelte-check --tsconfig ./tsconfig.json",
+    "serve": "vite preview --port 4173",
+    "clean": "rm -rf dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./prize-drop": "./dist/prize-drop-tool.js",
+    "./free-bets": "./dist/free-bets-tool.js",
+    "./tournament": "./dist/tournament-tool.js"
+  },
+  "dependencies": {
+    "lottie-web": "^5.12.2"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@tsconfig/svelte": "^5.0.7",
+    "@types/node": "^20.11.19",
+    "svelte": "^4.2.8",
+    "svelte-check": "^3.6.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vite-plugin-dts": "^3.7.3"
+  },
+  "keywords": [
+    "promo-tools",
+    "svelte",
+    "connector",
+    "gaming"
+  ]
+}
