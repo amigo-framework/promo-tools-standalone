@@ -1,0 +1,118 @@
+steps:
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "VALIDATE_TOKEN"
+      entrypoint: "bash"
+      secretEnv: ["GITHUB_PAT"]
+      args:
+          - "-c"
+          - |
+              echo "//npm.pkg.github.com/:_authToken=$$GITHUB_PAT" > .npmrc
+              echo "@amigo-framework:registry=https://npm.pkg.github.com/" >> .npmrc
+
+              if npm_user=$(npm whoami --registry=https://npm.pkg.github.com/ 2>/dev/null); then
+                echo "Authenticated as GitHub user: $$npm_user"
+              else
+                echo "Invalid or unauthorized GitHub token. Check Secret Manager or token permissions."
+                exit 1
+              fi
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "INFO"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - |
+              echo "Bash: v$$BASH_VERSION" && echo "Node: $(node -v)" && echo "npm: v$(npm -v)" && git --version
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "INSTALL"
+      entrypoint: "npm"
+      args: ["install"]
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "TYPE_CHECK"
+      entrypoint: "npm"
+      args: ["run", "type-check"]
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "BUILD"
+      entrypoint: "npm"
+      args: ["run", "build"]
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "PUBLISH"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - |
+              pkg_name=$$(node -p "require('./package.json').name")
+              pkg_version=$$(node -p "require('./package.json').version")
+              latest_published=$$(npm show "$$pkg_name" version 2>/dev/null || echo "0.0.0")
+              fallback_tag=$$(echo "$$pkg_version" | sed -E 's/([0-9]+\.[0-9]+)\.[0-9]+$$/pre-\1.x/')
+
+              npm install --save-dev semver
+
+              is_prerelease=$$(node -e "
+                const semver = require('semver');
+                console.log(semver.prerelease(process.argv[1]) ? 'yes' : 'no');
+              " "$$pkg_version")
+
+              is_newer=$$(node -e "
+                const semver = require('semver');
+                console.log(semver.gt(process.argv[1], process.argv[2]) ? 'yes' : 'no');
+              " "$$pkg_version" "$$latest_published")
+
+              echo "Package: $$pkg_name"
+              echo "Latest version: $$latest_published"
+              echo "Version to publish: $$pkg_version"
+
+              if [ "$$is_prerelease" = "yes" ]; then
+                publish_tag="next-$$pkg_version"
+                echo "Detected prerelease"
+                echo "npm publish tag: $$publish_tag"
+                npm publish --tag "$$publish_tag"
+
+              elif [ "$$is_newer" = "yes" ]; then
+                echo "Detected new stable version"
+                echo "npm publish tag: latest"
+                npm publish
+
+              else
+                publish_tag="$$fallback_tag"
+                echo "Detected older stable version"
+                echo "npm publish tag: $$publish_tag"
+                npm publish --tag "$$publish_tag"
+              fi
+
+    - name: "gcr.io/$PROJECT_ID/amigo_framework:latest"
+      id: "CHECK_PUBLISHED"
+      entrypoint: "bash"
+      args:
+          - "-c"
+          - |
+              # Ensure jq is available and print version
+              jq --version || exit 1
+
+              # Derive package name and tag (without 'v')
+              pkg_name=$$(node -p "require('./package.json').name")
+              pkg_version=$(node -p "require('./package.json').version")
+
+              if npm info "$$pkg_name" versions --json | jq -r '.[]' | grep -qx "$$pkg_version"; then
+                echo "Version $TAG_NAME correctly published (npm version $$pkg_version)."
+              else
+                echo "Error: Version $TAG_NAME not found on npm after publishing (npm version $$pkg_version)!"
+                exit 1
+              fi
+
+availableSecrets:
+    secretManager:
+        - versionName: projects/$PROJECT_ID/secrets/amigo-fw-release-pat/versions/latest
+          env: "GITHUB_PAT"
+
+substitutions:
+    #
+
+options:
+    machineType: N1_HIGHCPU_32
+    dynamic_substitutions: true
+    substitution_option: "ALLOW_LOOSE"

@@ -1,5 +1,5 @@
 {
-  "name": "@slotify/promo-tools-standalone",
+  "name": "@amigo-framework/promo-tools-standalone",
   "version": "1.0.0",
   "type": "module",
   "description": "Standalone promo tools with Svelte for connector integration",
