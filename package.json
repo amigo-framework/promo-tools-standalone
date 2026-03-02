@@ -7,16 +7,19 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite --port 4001 --host 0.0.0.0",
-    "build": "tsc && vite build",
-    "build:dev": "tsc && vite build --mode development",
+    "build": "tsc && vite build && npm run build:cleanup",
+    "build:dev": "tsc && vite build --mode development && npm run build:cleanup",
     "build:watch": "vite build --watch",
+    "build:cleanup": "find dist -name '*.d.ts' ! -name 'index.d.ts' -delete && find dist -type d -empty -delete",
     "preview": "vite preview",
     "type-check": "svelte-check --tsconfig ./tsconfig.json",
     "serve": "vite preview --port 4173",
     "clean": "rm -rf dist"
   },
   "files": [
-    "dist"
+    "dist/*.js",
+    "dist/*.css",
+    "dist/index.d.ts"
   ],
   "exports": {
     ".": {

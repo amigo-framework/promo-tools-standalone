@@ -8,6 +8,7 @@ export default defineConfig({
     svelte(),
     dts({
       insertTypesEntry: true,
+      rollupTypes: true, // Bundle all types into a single file
     })
   ],
   server: {
