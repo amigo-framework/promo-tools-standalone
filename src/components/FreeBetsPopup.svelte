@@ -157,9 +157,20 @@
     });
   }
 
-  function handleOptOut(event?: MouseEvent) {
+  async function handleOptOut(event?: MouseEvent) {
     if (event) event.stopPropagation(); // Prevent event bubbling
-    console.log('[FreeBetsPopup] handleOptOut called');
+    console.log('[FreeBetsPopup] handleOptOut called, closePromoOptOut setting:', connector.settings?.closePromoOptOut);
+    
+    if (connector.settings?.closePromoOptOut !== 'true') {
+      console.log('[FreeBetsPopup] Making optCampaign call with optIn=false for campaign:', campaign.campaignId);
+      await connector.optCampaign(campaign.campaignId, false);
+      console.log('[FreeBetsPopup] optCampaign call completed, dispatching buttonClick with optOut action');
+      visible = false;
+      dispatch('buttonClick', { action: 'optOut' });
+      return;
+    }
+
+    console.log('[FreeBetsPopup] Close mode active, just closing popup without opt out');
     visible = false;
     setTimeout(() => {
       console.log('[FreeBetsPopup] Dispatching close event');

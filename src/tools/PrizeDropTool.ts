@@ -103,12 +103,21 @@ export class PrizeDropTool implements IPromoTool {
 
   private async showStartedCampaignPopup(connector: IConnector, campaign: Campaign, config: any, campaignState: any, playerState: any, resolve: (value: any) => void) {
     const result = await this.overlayManager.showPrizeDropPopup(connector, campaign, 'started');
+    console.log('[PrizeDropTool] showStartedCampaignPopup result:', result);
 
-    if (result.action === 'buttonClick') {
+    if (result.action === 'optOut') {
+      // User opted out - ignore the campaign but refresh to update state
+      console.log('[PrizeDropTool] User opted out, refreshing campaign state');
+      resolve({shouldIgnore: false, shouldRefresh: true});
+    } else if (result.action === 'start' || result.action === 'buttonClick') {
+      // User started the campaign - activate it
+      console.log('[PrizeDropTool] User started campaign, activating header');
       this.updateActiveCampaignHeader(connector, campaign, config, campaignState, playerState);
       this.activeCampaignId = campaign.campaignId;
       resolve({shouldIgnore: false, shouldRefresh: false});
     } else {
+      // User closed without action (close button) - ignore campaign
+      console.log('[PrizeDropTool] User closed popup, ignoring campaign');
       resolve({shouldIgnore: true, shouldRefresh: false});
     }
   }

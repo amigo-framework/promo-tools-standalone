@@ -282,7 +282,19 @@
     return btnRedNormal;
   }
 
-  function handleOptOut() {
+  async function handleOptOut() {
+    console.log('[PrizeDropPopup] handleOptOut called, closePromoOptOut setting:', connector.settings?.closePromoOptOut);
+    
+    if (connector.settings?.closePromoOptOut !== 'true') {
+      console.log('[PrizeDropPopup] Making optCampaign call with optIn=false for campaign:', campaign.campaignId);
+      await connector.optCampaign(campaign.campaignId, false);
+      console.log('[PrizeDropPopup] optCampaign call completed, dispatching buttonClick with optOut action');
+      visible = false;
+      dispatch('buttonClick', { action: 'optOut' });
+      return;
+    }
+
+    console.log('[PrizeDropPopup] Close mode active, just closing popup without opt out');
     visible = false;
     setTimeout(() => dispatch('close'), 200);
   }
@@ -292,6 +304,9 @@
 
     if (mode === 'started') {
       await connector.optCampaign(campaign.campaignId, true);
+      visible = false;
+      dispatch('buttonClick', { action: 'start' });
+      return;
     }
 
     visible = false;

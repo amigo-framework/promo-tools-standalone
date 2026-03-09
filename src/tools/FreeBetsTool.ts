@@ -94,12 +94,21 @@ export class FreeBetsTool implements IPromoTool {
 
   private async showStartedCampaignPopup(connector: IConnector, campaign: Campaign, config: any, playerState: any, resolve: (value: any) => void) {
     const result = await this.overlayManager.showFreeBetsPopup(connector, campaign, 'started');
+    console.log('[FreeBetsTool] showStartedCampaignPopup result:', result);
 
-    if (result.action === 'buttonClick') {
+    if (result.action === 'optOut') {
+      // User opted out - ignore the campaign but refresh to update state
+      console.log('[FreeBetsTool] User opted out, refreshing campaign state');
+      resolve({shouldIgnore: false, shouldRefresh: true});
+    } else if (result.action === 'buttonClick') {
+      // User started the campaign - activate it
+      console.log('[FreeBetsTool] User started campaign, activating header');
       this.updateActiveCampaignHeader(connector, campaign, config, playerState);
       this.activeCampaignId = campaign.campaignId;
       resolve({shouldIgnore: false, shouldRefresh: false});
     } else {
+      // User closed without action (close button) - ignore campaign
+      console.log('[FreeBetsTool] User closed popup, ignoring campaign');
       resolve({shouldIgnore: true, shouldRefresh: false});
     }
   }
