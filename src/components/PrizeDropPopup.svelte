@@ -113,8 +113,7 @@
         prizeIndex: index,
         amountLeft: Number(currentCampaignState?.amountsLeft?.[index] ?? prize.amount ?? 0),
       }))
-      .filter((detailedPrize: any) => detailedPrize.amountLeft > 0)
-      .slice(0, 3);
+      .filter((detailedPrize: any) => detailedPrize.amountLeft > 0);
   }
 
   function getPrizesNotShownLeft(visiblePrizes: any[], currentCampaignState: any): number {
@@ -354,10 +353,18 @@
         {/if}
 
         {#if mode === 'started' || mode === 'active'}
-          <div class="promo-info-grid">
-            <div class="promo-info-card">
-              <div class="promo-info-value">{summaryPrizeValue}</div>
-            </div>
+          <div class="promo-prizes-list">
+            {#each prizesToShow as prize, index}
+              <div class="promo-prize-item">
+                <span class="promo-prize-left">
+                  {tr('prizeDropStartedPrizesLeftMessage', { 
+                    amountLeft: prize.amountLeft, 
+                    totalAmount: prize.amount 
+                  })}:
+                </span>
+                <span class="promo-prize-value">{renderPrizeValue(prize, prize.prizeIndex)}</span>
+              </div>
+            {/each}
           </div>
         {/if}
 
@@ -419,10 +426,12 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-message{position:absolute;left:50%;top:53%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-win-value{position:absolute;left:50%;top:58%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-size:26px;font-weight:800;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.7)}
 .promo-qualifying-bet{position:absolute;left:50%;top:64%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-size:13px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
-.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:50px;position:absolute;left:50%;top:58%;width:max-content;transform:translateX(-50%);margin:0}
-.promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
-.promo-info-label{font-size:12px;color:#fff;opacity:.95;margin-bottom:6px}
-.promo-info-value{font-size:22px;font-weight:700;color:#fff}
+.promo-prizes-list{position:absolute;left:50%;top:58%;width:calc(100% - 40px);max-width:400px;transform:translateX(-50%);background:rgba(0,0,0,.15);border-radius:8px;padding:12px;backdrop-filter:blur(4px)}
+.promo-prize-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;line-height:1.3}
+.promo-prize-item:last-child{margin-bottom:0}
+.promo-prize-left{color:#fff;flex:1;text-align:left}
+.promo-prize-value{color:#fff;font-weight:700;text-align:right;margin-left:8px}
+.promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
 .promo-end-date{position:absolute;left:50%;top:70%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-size:14px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-terms-link{position:absolute;left:50%;top:75%;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:13px;font-weight:600}
 .promo-terms-link{position:absolute;left:50%;top:75%;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:13px;font-weight:600;pointer-events:auto}
@@ -430,5 +439,5 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:120px}
 .promo-image-button-bg{display:block;width:120px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-base{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-win-value{top:50%;width:calc(100% - 24px);font-size:22px}.promo-qualifying-bet{top:64%;width:calc(100% - 24px);font-size:12px}.promo-info-grid{top:58%;gap:28px}.promo-end-date{top:70%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:73%;font-size:12px}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
+@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-base{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-win-value{top:50%;width:calc(100% - 24px);font-size:22px}.promo-qualifying-bet{top:64%;width:calc(100% - 24px);font-size:12px}.promo-prizes-list{top:58%;width:calc(100% - 24px);padding:10px;font-size:12px}.promo-end-date{top:70%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:73%;font-size:12px}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
 </style>
