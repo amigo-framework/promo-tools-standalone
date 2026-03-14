@@ -2,7 +2,8 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
-  import prizeDropImage from '../assets/promo/prizedrop.png';
+  import prizeDropHeaderImage from '../assets/promo/prizedrop_header.png';
+  import prizeDropFooterImage from '../assets/promo/prizedrop_footer.png';
   import btnGreenNormal from '../assets/buttons/btn_green_normal.png';
   import btnGreenHover from '../assets/buttons/btn_green_hover.png';
   import btnGreenDown from '../assets/buttons/btn_green_down.png';
@@ -69,6 +70,8 @@
       : tr('start');
   $: secondaryButtonLabel = connector.settings?.closePromoOptOut === 'true' ? tr('close') : tr('optOut');
   $: showOptOutButton = mode === 'started' && connector.settings?.hidePromoOptOut !== 'true';
+  $: shouldExtendFooter = prizesToShow.length > 2;
+  $: footerScaleY = 1 + (Math.max(0, prizesToShow.length - 2) * 0.05);
 
   function tr(key: string, opts?: Record<string, any>): string {
     const i18nCandidates = [
@@ -331,7 +334,17 @@
       aria-modal="true"
       aria-labelledby="popup-title"
     >
-      <img class="promo-image-base" src={prizeDropImage} alt="" aria-hidden="true" />
+      <div class="promo-images-container">
+        <img class="promo-image-header" src={prizeDropHeaderImage} alt="" aria-hidden="true" />
+        <img 
+          class="promo-image-footer" 
+          class:extended={shouldExtendFooter} 
+          src={prizeDropFooterImage} 
+          alt="" 
+          aria-hidden="true"
+          style="--footer-scale-y: {footerScaleY}" 
+        />
+      </div>
       <div class="promo-image-overlay-content">
         <h3 id="popup-title" class="promo-title">{title}</h3>
         <div class="promo-image-message">{message}</div>
@@ -420,7 +433,10 @@
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important;pointer-events:auto !important}
 .promo-image-popup{position:relative;width:min(92vw,700px);border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto}
-.promo-image-base{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain}
+.promo-images-container{display:flex;flex-direction:column;width:100%;max-height:85vh;}
+.promo-image-header{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;}
+.promo-image-footer{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;}
+.promo-image-footer.extended{transform:scaleY(var(--footer-scale-y, 1));transform-origin:top;}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-title{position:absolute;left:50%;top:43%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:28px;line-height:1.05;text-shadow:0 2px 4px rgba(0,0,0,.6)}
 .promo-image-message{position:absolute;left:50%;top:53%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
@@ -439,5 +455,5 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:120px}
 .promo-image-button-bg{display:block;width:120px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-base{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-win-value{top:50%;width:calc(100% - 24px);font-size:22px}.promo-qualifying-bet{top:64%;width:calc(100% - 24px);font-size:12px}.promo-prizes-list{top:58%;width:calc(100% - 24px);padding:10px;font-size:12px}.promo-end-date{top:70%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:73%;font-size:12px}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
+@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-images-container{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-win-value{top:50%;width:calc(100% - 24px);font-size:22px}.promo-qualifying-bet{top:64%;width:calc(100% - 24px);font-size:12px}.promo-prizes-list{top:58%;width:calc(100% - 24px);padding:10px;font-size:12px}.promo-end-date{top:70%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:73%;font-size:12px}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
 </style>
