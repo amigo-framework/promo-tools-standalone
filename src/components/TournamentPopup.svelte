@@ -2,13 +2,16 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
-  import tournamentImage from '../assets/promo/tournament.png';
-  import btnGreenNormal from '../assets/buttons/btn_green_normal.png';
-  import btnGreenHover from '../assets/buttons/btn_green_hover.png';
-  import btnGreenDown from '../assets/buttons/btn_green_down.png';
-  import btnRedNormal from '../assets/buttons/btn_red_normal.png';
-  import btnRedHover from '../assets/buttons/btn_red_hover.png';
-  import btnRedDown from '../assets/buttons/btn_red_down.png';
+  import promoTopTournament from '../assets/promo/promo_top_tournament.png';
+  import promoBottom from '../assets/promo/promo_bottom.png';
+  import promoGreenBtnNormal from '../assets/buttons/promo_green_btn_normal.png';
+  import promoGreenBtnHover from '../assets/buttons/promo_green_btn_hover.png';
+  import promoGreenBtnDown from '../assets/buttons/promo_green_btn_down.png';
+  import promoGreenBtnDisabled from '../assets/buttons/promo_green_btn_disabled.png';
+  import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
+  import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
+  import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
+  import promoRedBtnDisabled from '../assets/buttons/promo_red_btn_disabled.png';
 
   export let connector: IConnector;
   export let campaign: Campaign;
@@ -381,15 +384,17 @@
   }
 
   function getPrimaryButtonImage(): string {
-    if (primaryButtonState === 'down') return btnGreenDown;
-    if (primaryButtonState === 'hover') return btnGreenHover;
-    return btnGreenNormal;
+    if (primaryButtonState === 'disabled') return promoGreenBtnDisabled;
+    if (primaryButtonState === 'down') return promoGreenBtnDown;
+    if (primaryButtonState === 'hover') return promoGreenBtnHover;
+    return promoGreenBtnNormal;
   }
 
   function getSecondaryButtonImage(): string {
-    if (secondaryButtonState === 'down') return btnRedDown;
-    if (secondaryButtonState === 'hover') return btnRedHover;
-    return btnRedNormal;
+    if (secondaryButtonState === 'disabled') return promoRedBtnDisabled;
+    if (secondaryButtonState === 'down') return promoRedBtnDown;
+    if (secondaryButtonState === 'hover') return promoRedBtnHover;
+    return promoRedBtnNormal;
   }
 
   async function handleOptOut() {
@@ -479,7 +484,10 @@
       aria-modal="true"
       aria-labelledby="popup-title"
     >
-      <img class="promo-image-base" src={tournamentImage} alt="" aria-hidden="true" />
+      <div class="promo-image-container">
+        <img class="promo-image-top" src={promoTopTournament} alt="" aria-hidden="true" />
+        <img class="promo-image-bottom" src={promoBottom} alt="" aria-hidden="true" />
+      </div>
       <div class="promo-image-overlay-content">
         <h3 id="popup-title" class="promo-title">{title}</h3>
         {#if mode === 'finished'}
@@ -572,8 +580,10 @@
 <style>
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important;pointer-events:auto !important}
-.promo-image-popup{position:relative;width:min(92vw,700px);border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto}
-.promo-image-base{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain}
+.promo-image-popup{position:relative;width:min(95vw,800px);min-height:600px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto}
+.promo-image-container{position:relative;width:100%;height:auto;display:flex;flex-direction:column}
+.promo-image-top{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/681}
+.promo-image-bottom{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/352}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-title{position:absolute;left:50%;top:43%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:28px;line-height:1.05;text-shadow:0 2px 4px rgba(0,0,0,.6)}
 .promo-image-message{position:absolute;left:50%;top:53%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
@@ -588,5 +598,7 @@
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:120px}
 .promo-image-button-bg{display:block;width:120px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-base{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-finished-message{top:51%;width:calc(100% - 24px);font-size:14px}.promo-win-value{top:56%;width:calc(100% - 24px);font-size:20px}.promo-win-list{top:58%;max-width:calc(100% - 40px);font-size:16px}.promo-qualifying-bet{top:63%;width:calc(100% - 24px);font-size:12px}.promo-end-date{top:69%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:73%;font-size:12px}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
+@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-top{aspect-ratio:925/681}.promo-image-bottom{aspect-ratio:925/352}.promo-image-overlay-content{inset:0;padding:14px}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:51%;width:calc(100% - 24px)}.promo-finished-message{top:51%;width:calc(100% - 24px);font-size:14px}.promo-win-value{top:56%;width:calc(100% - 24px);font-size:20px}.promo-win-list{top:58%;max-width:calc(100% - 40px);font-size:16px}.promo-qualifying-bet{top:63%;width:calc(100% - 24px);font-size:12px}.promo-end-date{top:69%;width:calc(100% - 24px);font-size:12px}.promo-terms-link{top:74%;font-size:12px}.promo-actions{gap:8px;bottom:clamp(35px, 6vh, 50px)}.promo-image-button,.promo-image-button-bg{width:120px;min-width:120px}.promo-image-button-label{font-size:12px}}
+
+@media (orientation: landscape){.promo-image-popup{transform:scale(0.8);transform-origin:center}}
 </style>

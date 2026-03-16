@@ -2,13 +2,16 @@
   import { createEventDispatcher, onMount, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
-  import freeBetsImage from '../assets/promo/freebets.png';
-  import btnGreenNormal from '../assets/buttons/btn_green_normal.png';
-  import btnGreenHover from '../assets/buttons/btn_green_hover.png';
-  import btnGreenDown from '../assets/buttons/btn_green_down.png';
-  import btnRedNormal from '../assets/buttons/btn_red_normal.png';
-  import btnRedHover from '../assets/buttons/btn_red_hover.png';
-  import btnRedDown from '../assets/buttons/btn_red_down.png';
+  import promoTopFreespin from '../assets/promo/promo_top_freespin.png';
+  import promoBottom from '../assets/promo/promo_bottom.png';
+  import promoGreenBtnNormal from '../assets/buttons/promo_green_btn_normal.png';
+  import promoGreenBtnHover from '../assets/buttons/promo_green_btn_hover.png';
+  import promoGreenBtnDown from '../assets/buttons/promo_green_btn_down.png';
+  import promoGreenBtnDisabled from '../assets/buttons/promo_green_btn_disabled.png';
+  import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
+  import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
+  import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
+  import promoRedBtnDisabled from '../assets/buttons/promo_red_btn_disabled.png';
 
   // Export props with defaults
   export let connector: IConnector;
@@ -125,15 +128,17 @@
   }
 
   function getPrimaryButtonImage(): string {
-    if (primaryButtonState === 'down') return btnGreenDown;
-    if (primaryButtonState === 'hover') return btnGreenHover;
-    return btnGreenNormal;
+    if (primaryButtonState === 'disabled') return promoGreenBtnDisabled;
+    if (primaryButtonState === 'down') return promoGreenBtnDown;
+    if (primaryButtonState === 'hover') return promoGreenBtnHover;
+    return promoGreenBtnNormal;
   }
 
   function getSecondaryButtonImage(): string {
-    if (secondaryButtonState === 'down') return btnRedDown;
-    if (secondaryButtonState === 'hover') return btnRedHover;
-    return btnRedNormal;
+    if (secondaryButtonState === 'disabled') return promoRedBtnDisabled;
+    if (secondaryButtonState === 'down') return promoRedBtnDown;
+    if (secondaryButtonState === 'hover') return promoRedBtnHover;
+    return promoRedBtnNormal;
   }
 
   function getMessage(config: any, playerState: any, mode: string): string {
@@ -230,7 +235,10 @@
       aria-modal="true"
       aria-labelledby="popup-title"
     >
-      <img class="promo-image-base" src={freeBetsImage} alt="" aria-hidden="true" />
+      <div class="promo-image-container">
+        <img class="promo-image-top" src={promoTopFreespin} alt="" aria-hidden="true" />
+        <img class="promo-image-bottom" src={promoBottom} alt="" aria-hidden="true" />
+      </div>
       <div class="promo-image-overlay-content">
           <div class="promo-fs-hero" aria-label="Remaining free spins">
             {freeBetsCount}
@@ -299,8 +307,10 @@
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important}
-.promo-image-popup{position:relative;width:min(92vw,700px);border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent}
-.promo-image-base{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain}
+.promo-image-popup{position:relative;width:min(95vw,800px);min-height:600px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent}
+.promo-image-container{position:relative;width:100%;height:auto;display:flex;flex-direction:column}
+.promo-image-top{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/681}
+.promo-image-bottom{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/352}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-fs-hero{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
 .promo-title{position:absolute;left:50%;top:43%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:28px;line-height:1.05;text-shadow:0 2px 4px rgba(0,0,0,.6)}
@@ -314,5 +324,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
 .promo-info-label{font-size:12px;color:#fff;opacity:.95;margin-bottom:6px}
 .promo-info-value{font-size:22px;font-weight:700;color:#fff}
-@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-base{max-height:88vh}.promo-image-overlay-content{inset:0;padding:14px}.promo-fs-hero{top:10%;font-size:34px;-webkit-text-stroke:1.5px #d4af37}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:39%;width:calc(100% - 24px)}.promo-info-grid{top:58%;gap:28px}.promo-end-date{top:70%;width:calc(100% - 24px)}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:96px;min-width:96px}.promo-image-button-label{font-size:12px}}
+@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-top{aspect-ratio:925/681}.promo-image-bottom{aspect-ratio:925/352}.promo-image-overlay-content{inset:0;padding:14px}.promo-fs-hero{top:10%;font-size:34px;-webkit-text-stroke:1.5px #d4af37}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:39%;width:calc(100% - 24px)}.promo-info-grid{top:58%;gap:28px}.promo-end-date{top:70%;width:calc(100% - 24px)}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:96px;min-width:96px}.promo-image-button-label{font-size:12px}}
+
+@media (orientation: landscape){.promo-image-popup{transform:scale(0.8);transform-origin:center}}
 </style>
