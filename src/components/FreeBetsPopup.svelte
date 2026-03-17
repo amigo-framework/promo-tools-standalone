@@ -243,12 +243,12 @@
           <div class="promo-fs-hero" aria-label="Remaining free spins">
             {freeBetsCount}
           </div>
-        <h3
+        <div
           id="popup-title"
           class="promo-title"
         >
           {title}
-        </h3>
+        </div>
         <div class="promo-image-message">{message}</div>
 
         <div class="promo-info-grid">
@@ -272,7 +272,7 @@
       <div class="promo-actions">
         {#if showOptOutButton}
           <button
-            class="promo-image-button"
+            class="promo-image-button secondary"
             on:mouseenter={() => (secondaryButtonState = 'hover')}
             on:mouseleave={() => (secondaryButtonState = 'normal')}
             on:mousedown={() => (secondaryButtonState = 'down')}
@@ -307,24 +307,59 @@
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important}
-.promo-image-popup{position:relative;width:min(95vw,800px);min-height:600px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent}
-.promo-image-container{position:relative;width:100%;height:auto;display:flex;flex-direction:column}
-.promo-image-top{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/681}
-.promo-image-bottom{display:block;width:100%;height:auto;object-fit:contain;aspect-ratio:925/352}
+.promo-image-popup{position:relative;width:400px;height:470px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
+.promo-image-container{position:relative;width:400px;height:470px;display:flex;flex-direction:column;transform:translateY(-10px)}
+.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/695}
+.promo-image-bottom{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-fs-hero{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
-.promo-title{position:absolute;left:50%;top:43%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:28px;line-height:1.05;text-shadow:0 2px 4px rgba(0,0,0,.6)}
-.promo-image-message{position:absolute;left:50%;top:52%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-end-date{position:absolute;left:50%;top:72%;width:calc(100% - 40px);transform:translateX(-50%);text-align:center;font-size:14px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:41px;display:flex;justify-content:center;gap:14px;padding:0 14px;transform:translateX(-50%)}
-.promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:122px}
-.promo-image-button-bg{display:block;width:122px;height:auto;user-select:none;pointer-events:none}
-.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:50px;position:absolute;left:50%;top:58%;width:max-content;transform:translateX(-50%);margin:0}
+.promo-fs-hero{position:absolute;left:50%;top:110px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
+.promo-title{position:absolute;left:50%;top:227px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:261px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-end-date{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:12px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
+.promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px}
+.promo-image-button-bg{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
+.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
+.promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
+.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:289px;width:max-content;transform:translateX(-50%);margin:0}
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
-.promo-info-label{font-size:12px;color:#fff;opacity:.95;margin-bottom:6px}
-.promo-info-value{font-size:22px;font-weight:700;color:#fff}
-@media (max-width: 768px){.promo-image-popup{width:95vw}.promo-image-top{aspect-ratio:925/681}.promo-image-bottom{aspect-ratio:925/352}.promo-image-overlay-content{inset:0;padding:14px}.promo-fs-hero{top:10%;font-size:34px;-webkit-text-stroke:1.5px #d4af37}.promo-title{top:22%;width:calc(100% - 24px);font-size:22px}.promo-image-message{top:39%;width:calc(100% - 24px)}.promo-info-grid{top:58%;gap:28px}.promo-end-date{top:70%;width:calc(100% - 24px)}.promo-actions{gap:8px;bottom:58px}.promo-image-button,.promo-image-button-bg{width:96px;min-width:96px}.promo-image-button-label{font-size:12px}}
+.promo-info-label{font-size:8px;color:#fff;opacity:.95;margin-bottom:3px}
+.promo-info-value{font-size:16px;font-weight:700;color:#fff}
+/* Responsive scaling uniforme */
+@media (min-width: 700px) {
+  .promo-image-popup {
+    transform: scale(1.3);
+  }
+}
 
-@media (orientation: landscape){.promo-image-popup{transform:scale(0.8);transform-origin:center}}
+@media (min-width: 900px) {
+  .promo-image-popup {
+    transform: scale(1.6);
+  }
+}
+
+@media (max-width: 399px) {
+  .promo-image-popup {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-height: 470px) {
+  .promo-image-popup {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-height: 368px) {
+  .promo-image-popup {
+    transform: scale(0.7);
+  }
+}
+
+/* Per schermi molto piccoli */
+@media (max-width: 320px) or (max-height: 300px) {
+  .promo-image-popup {
+    transform: scale(0.6);
+  }
+}
 </style>
