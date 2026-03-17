@@ -7,11 +7,9 @@
   import promoGreenBtnNormal from '../assets/buttons/promo_green_btn_normal.png';
   import promoGreenBtnHover from '../assets/buttons/promo_green_btn_hover.png';
   import promoGreenBtnDown from '../assets/buttons/promo_green_btn_down.png';
-  import promoGreenBtnDisabled from '../assets/buttons/promo_green_btn_disabled.png';
   import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
   import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
   import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
-  import promoRedBtnDisabled from '../assets/buttons/promo_red_btn_disabled.png';
 
   // Export props with defaults
   export let connector: IConnector;
@@ -127,19 +125,6 @@
     return tr('freeBetsIntroTitle');
   }
 
-  function getPrimaryButtonImage(): string {
-    if (primaryButtonState === 'disabled') return promoGreenBtnDisabled;
-    if (primaryButtonState === 'down') return promoGreenBtnDown;
-    if (primaryButtonState === 'hover') return promoGreenBtnHover;
-    return promoGreenBtnNormal;
-  }
-
-  function getSecondaryButtonImage(): string {
-    if (secondaryButtonState === 'disabled') return promoRedBtnDisabled;
-    if (secondaryButtonState === 'down') return promoRedBtnDown;
-    if (secondaryButtonState === 'hover') return promoRedBtnHover;
-    return promoRedBtnNormal;
-  }
 
   function getMessage(config: any, playerState: any, mode: string): string {
     if (mode === 'finished') {
@@ -273,29 +258,21 @@
         {#if showOptOutButton}
           <button
             class="promo-image-button secondary"
-            on:mouseenter={() => (secondaryButtonState = 'hover')}
-            on:mouseleave={() => (secondaryButtonState = 'normal')}
-            on:mousedown={() => (secondaryButtonState = 'down')}
-            on:mouseup={() => (secondaryButtonState = 'hover')}
-            on:touchstart={() => (secondaryButtonState = 'down')}
-            on:touchend={() => (secondaryButtonState = 'normal')}
             on:click={handleOptOut}
           >
-            <img class="promo-image-button-bg" src={getSecondaryButtonImage()} alt="" aria-hidden="true" />
+            <img class="normal" src={promoRedBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={promoRedBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={promoRedBtnDown} alt="" aria-hidden="true" />
             <span class="promo-image-button-label">{secondaryButtonLabel}</span>
           </button>
         {/if}
         <button
           class="promo-image-button"
-          on:mouseenter={() => (primaryButtonState = 'hover')}
-          on:mouseleave={() => (primaryButtonState = 'normal')}
-          on:mousedown={() => (primaryButtonState = 'down')}
-          on:mouseup={() => (primaryButtonState = 'hover')}
-          on:touchstart={() => (primaryButtonState = 'down')}
-          on:touchend={() => (primaryButtonState = 'normal')}
           on:click={handleStart}
         >
-          <img class="promo-image-button-bg" src={getPrimaryButtonImage()} alt="" aria-hidden="true" />
+          <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
+          <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
+          <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
       </div>
@@ -317,15 +294,22 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-message{position:absolute;left:50%;top:261px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-end-date{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-actions{position:absolute;left:50%;right:auto;bottom:12px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
-.promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px}
-.promo-image-button-bg{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
+.promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
+.promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
+.promo-image-button img.hover{display:none}
+.promo-image-button img.down{display:none}
+.promo-image-button:hover img.normal{display:none}
+.promo-image-button:hover img.hover{display:block}
+.promo-image-button:active img.normal,
+.promo-image-button:active img.hover{display:none}
+.promo-image-button:active img.down{display:block}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
 .promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
 .promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:289px;width:max-content;transform:translateX(-50%);margin:0}
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
 .promo-info-label{font-size:8px;color:#fff;opacity:.95;margin-bottom:3px}
 .promo-info-value{font-size:16px;font-weight:700;color:#fff}
-/* Responsive scaling uniforme */
+/* Responsive scaling */
 @media (min-width: 700px) {
   .promo-image-popup {
     transform: scale(1.3);
@@ -356,7 +340,6 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
   }
 }
 
-/* Per schermi molto piccoli */
 @media (max-width: 320px) or (max-height: 300px) {
   .promo-image-popup {
     transform: scale(0.6);
