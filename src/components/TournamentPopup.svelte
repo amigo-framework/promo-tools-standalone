@@ -565,7 +565,7 @@
 .promo-finished-message{position:absolute;left:50%;top:261px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;text-shadow:0 1px 2px rgba(0,0,0,.6);margin-top:5px}
 .promo-win-value{position:absolute;left:50%;top:287px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.5px #ee141a}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.5px #ee141a}
-.promo-win-list{top:282px;left:50%;width:max-content;max-width:320px;transform:translateX(-50%);text-align:center;font-size:12px}
+.promo-win-list{top:288px;left:50%;width:max-content;max-width:320px;transform:translateX(-50%);text-align:center;font-size:12px}
 .promo-win-list-ul{margin:0;padding-left:0;list-style:none}
 .promo-qualifying-bet{position:absolute;left:50%;top:385px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 .promo-end-date{position:absolute;left:50%;top:397px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
@@ -583,15 +583,27 @@
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important;pointer-events:none}
 .promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
 /* Responsive scaling */
-@media (min-width: 700px) {
+@media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .promo-image-popup {
+    transform: scale(1.4);
+  }
+}
+
+@media (min-width: 1600px) {
   .promo-image-popup {
     transform: scale(1.6);
+  }
+}
+
+@media (min-width: 2000px) {
+  .promo-image-popup {
+    transform: scale(1.8);
   }
 }
 

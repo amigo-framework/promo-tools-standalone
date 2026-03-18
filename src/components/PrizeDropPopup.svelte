@@ -407,20 +407,20 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-top{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681}
 .promo-image-bottom{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-title{position:absolute;left:50%;top:239px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:273px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-win-value{position:absolute;left:50%;top:284px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
+.promo-title{position:absolute;left:50%;top:223px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:263px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-win-value{position:absolute;left:50%;top:289px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
-.promo-qualifying-bet{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
-.promo-prizes-list{position:absolute;left:50%;top:284px;width:340px;max-width:340px;transform:translateX(-50%);border-radius:4px;padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.promo-prize-item{display:flex;flex-direction:row;justify-content:center;align-items:center;margin-bottom:0;font-size:15px;line-height:1.3;font-family:'Roboto',Arial,sans-serif;font-weight:900;gap:2px}
+.promo-qualifying-bet{position:absolute;left:50%;top:379px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.promo-prizes-list{position:absolute;left:50%;top:274px;width:300px;max-width:300px;transform:translateX(-50%);border-radius:4px;padding:6px 8px;display:grid;grid-template-columns:1fr 1fr;gap:2px 0px;max-height:95px;overflow-y:auto}
+.promo-prize-item{display:flex;flex-direction:row;justify-content:center;align-items:center;margin-bottom:0;font-size:10px;line-height:1.1;font-family:'Roboto',Arial,sans-serif;font-weight:900;gap:2px;box-sizing:border-box;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .promo-prize-item:last-child{margin-bottom:0}
 .promo-prize-left{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center}
-.promo-prize-value{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center}
+.promo-prize-value{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center;font-weight:bold}
 .promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
-.promo-end-date{position:absolute;left:50%;top:401px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-terms-link{position:absolute;left:50%;top:413px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:-7px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-end-date{position:absolute;left:50%;top:391px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-terms-link{position:absolute;left:50%;top:403px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:11px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -433,15 +433,27 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
 .promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
 /* Responsive scaling  */
-@media (min-width: 700px) {
+@media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .promo-image-popup {
+    transform: scale(1.4);
+  }
+}
+
+@media (min-width: 1600px) {
   .promo-image-popup {
     transform: scale(1.6);
+  }
+}
+
+@media (min-width: 2000px) {
+  .promo-image-popup {
+    transform: scale(1.8);
   }
 }
 

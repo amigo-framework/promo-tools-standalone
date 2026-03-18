@@ -289,10 +289,10 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/695}
 .promo-image-bottom{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-fs-hero{position:absolute;left:50%;top:110px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
-.promo-title{position:absolute;left:50%;top:227px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:261px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-end-date{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-fs-hero{position:absolute;left:55%;top:110px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
+.promo-title{position:absolute;left:50%;top:224px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:264px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-end-date{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-actions{position:absolute;left:50%;right:auto;bottom:12px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
@@ -305,20 +305,32 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button:active img.down{display:block}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
 .promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
-.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:289px;width:max-content;transform:translateX(-50%);margin:0}
+.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:315px;width:max-content;transform:translateX(-50%);margin:0}
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
-.promo-info-label{font-size:8px;color:#fff;opacity:.95;margin-bottom:3px}
-.promo-info-value{font-size:16px;font-weight:700;color:#fff}
+.promo-info-label{font-size:9px;color:#fff;opacity:.95;margin-bottom:3px}
+.promo-info-value{font-size:20px;font-weight:700;color:#fff}
 /* Responsive scaling */
-@media (min-width: 700px) {
+@media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {
-    transform: scale(1.3);
+    transform: scale(1.2);
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .promo-image-popup {
+    transform: scale(1.4);
+  }
+}
+
+@media (min-width: 1600px) {
   .promo-image-popup {
     transform: scale(1.6);
+  }
+}
+
+@media (min-width: 2000px) {
+  .promo-image-popup {
+    transform: scale(1.8);
   }
 }
 
