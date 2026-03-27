@@ -4,6 +4,7 @@
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
   import promoTopPrize from '../assets/promo/promo_top_prize.png';
   import promoBottom from '../assets/promo/promo_bottom.png';
+  import promoBoxSmall from '../assets/promo/promo_box_small.png';
   import promoGreenBtnNormal from '../assets/buttons/promo_green_btn_normal.png';
   import promoGreenBtnHover from '../assets/buttons/promo_green_btn_hover.png';
   import promoGreenBtnDown from '../assets/buttons/promo_green_btn_down.png';
@@ -337,7 +338,7 @@
     >
       <div class="promo-images-container">
         <img class="promo-image-top" src={promoTopPrize} alt="" aria-hidden="true" />
-        <img class="promo-image-bottom" src={promoBottom} alt="" aria-hidden="true" />
+        <img class="promo-image-bottom" src={promoBoxSmall} alt="" aria-hidden="true" />
       </div>
       <div class="promo-image-overlay-content">
         <div id="popup-title" class="promo-title">{title}</div>
@@ -501,26 +502,26 @@
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important;pointer-events:auto !important}
-.promo-image-popup{position:relative;width:400px;height:467px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto;transform-origin:center center}
-.promo-images-container{display:flex;flex-direction:column;width:400px;height:467px;transform:translateY(-7px)}
+.promo-image-popup{position:relative;width:600px;height:467px;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto;transform-origin:center center}
+.promo-images-container{display:flex;flex-direction:column;width:600px;height:467px;transform:translateY(-7px)}
 
-.promo-image-top{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681}
-.promo-image-bottom{display:block;width:100%;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352}
+.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681;margin:0 auto;position:relative;z-index:2;transform:translateY(-50px)}
+.promo-image-bottom{display:block;width:600px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352;margin:0 auto;transform:translateY(-100px)}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-title{position:absolute;left:50%;top:223px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:263px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-win-value{position:absolute;left:50%;top:289px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
+.promo-title{position:absolute;left:50%;top:175px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-win-value{position:absolute;left:50%;top:237px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
-.promo-qualifying-bet{position:absolute;left:50%;top:379px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
-.promo-prizes-list{position:absolute;left:50%;top:274px;width:300px;max-width:300px;transform:translateX(-50%);border-radius:4px;padding:6px 8px;display:grid;grid-template-columns:1fr 1fr;gap:2px 0px;max-height:95px;overflow-y:auto}
+.promo-qualifying-bet{position:absolute;left:50%;top:356px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.promo-prizes-list{position:absolute;left:50%;top:229px;width:300px;max-width:300px;transform:translateX(-50%);border-radius:4px;padding:6px 8px;display:grid;grid-template-columns:1fr 1fr;gap:2px 0px;max-height:95px;overflow-y:auto}
 .promo-prize-item{display:flex;flex-direction:row;justify-content:center;align-items:center;margin-bottom:0;font-size:10px;line-height:1.1;font-family:'Roboto',Arial,sans-serif;font-weight:900;gap:2px;box-sizing:border-box;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .promo-prize-item:last-child{margin-bottom:0}
 .promo-prize-left{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center}
 .promo-prize-value{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center;font-weight:bold}
 .promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
-.promo-end-date{position:absolute;left:50%;top:391px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-terms-link{position:absolute;left:50%;top:403px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:11px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:37px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -657,6 +658,27 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
   .promo-terms-overlay { width: 315px; padding: 12px; }
   .promo-terms-content { transform: translateY(-32px); }
   .promo-terms-close { bottom: -10px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .promo-terms-popup { width: 567px; height: 374px; border-radius: 7px; }
+  .promo-terms-container { width: 567px; height: 374px; }
+  .promo-terms-banner { width: 378px; }
+  .promo-banner-title { font-size: 20px; }
+  .promo-terms-box { width: 315px !important; }
+  .promo-terms-overlay { width: 315px; padding: 12px; }
+  .promo-terms-content { transform: translateY(-32px); }
+  .promo-terms-close { bottom: -10px; }
+  .promo-image-top { transform: translateY(-30px); }
+  .promo-image-bottom { transform: translateY(-80px); }
+  .promo-title { top: 195px; }
+  .promo-image-message { top: 239px; }
+  .promo-win-value { top: 257px; }
+  .promo-prizes-list { top: 249px; }
+  .promo-qualifying-bet { top: 376px; }
+  .promo-end-date { top: 388px; }
+  .promo-terms-link { top: 400px; }
+  .promo-actions { bottom: 17px; }
 }
 
 @media (max-width: 479px) {

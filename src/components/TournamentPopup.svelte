@@ -4,6 +4,7 @@
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
   import promoTopTournament from '../assets/promo/promo_top_tournament.png';
   import promoBottom from '../assets/promo/promo_bottom.png';
+  import promoBoxSmall from '../assets/promo/promo_box_small.png';
   import promoGreenBtnNormal from '../assets/buttons/promo_green_btn_normal.png';
   import promoGreenBtnHover from '../assets/buttons/promo_green_btn_hover.png';
   import promoGreenBtnDown from '../assets/buttons/promo_green_btn_down.png';
@@ -491,7 +492,7 @@
     >
       <div class="promo-image-container">
         <img class="promo-image-top" src={promoTopTournament} alt="" aria-hidden="true" />
-        <img class="promo-image-bottom" src={promoBottom} alt="" aria-hidden="true" />
+        <img class="promo-image-bottom" src={promoBoxSmall} alt="" aria-hidden="true" />
       </div>
       <div class="promo-image-overlay-content">
         <div id="popup-title" class="promo-title">{title}</div>
@@ -661,22 +662,22 @@
 <style>
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important;pointer-events:auto !important}
-.promo-image-popup{position:relative;width:400px;height:470px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto;transform-origin:center center}
-.promo-image-container{position:relative;width:400px;height:470px;display:flex;flex-direction:column;transform:translateY(-10px)}
-.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/695}
-.promo-image-bottom{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352}
+.promo-image-popup{position:relative;width:600px;height:470px;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;pointer-events:auto;transform-origin:center center}
+.promo-image-container{position:relative;width:600px;height:470px;display:flex;flex-direction:column;transform:translateY(-10px)}
+.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/695;margin:0 auto;position:relative;z-index:2}
+.promo-image-bottom{display:block;width:600px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352;margin:0 auto;transform:translateY(-100px)}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-title{position:absolute;left:50%;top:225px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:269px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-finished-message{position:absolute;left:50%;top:261px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;text-shadow:0 1px 2px rgba(0,0,0,.6);margin-top:5px}
-.promo-win-value{position:absolute;left:50%;top:287px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.5px #ee141a}
+.promo-title{position:absolute;left:50%;top:205px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:249px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-finished-message{position:absolute;left:50%;top:241px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;text-shadow:0 1px 2px rgba(0,0,0,.6);margin-top:5px}
+.promo-win-value{position:absolute;left:50%;top:267px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.5px #ee141a}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.5px #ee141a}
-.promo-win-list{top:288px;left:50%;width:max-content;max-width:320px;transform:translateX(-50%);text-align:center;font-size:12px}
+.promo-win-list{top:268px;left:50%;width:max-content;max-width:320px;transform:translateX(-50%);text-align:center;font-size:12px}
 .promo-win-list-ul{margin:0;padding-left:0;list-style:none}
-.promo-qualifying-bet{position:absolute;left:50%;top:385px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
-.promo-end-date{position:absolute;left:50%;top:397px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-terms-link{position:absolute;left:50%;top:409px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:11px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-qualifying-bet{position:absolute;left:50%;top:356px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:37px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -716,8 +717,9 @@
 @media (max-width: 399px) {
   .promo-image-popup {
     transform: scale(0.9);
-  }
-}
+  }  .promo-image-top, .promo-image-bottom {
+    margin: 0 auto;
+  }}
 
 @media (max-height: 470px) {
   .promo-image-popup {
@@ -733,6 +735,7 @@
 
 @media (max-width: 320px) or (max-height: 300px) {
   .promo-image-popup {
+    width: 400px;
     transform: scale(0.6);
   }
 }
