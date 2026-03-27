@@ -10,6 +10,8 @@
   import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
   import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
   import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
+  import promoBanner from '../assets/promo/promo_banner.png';
+  import promoBoxLarge from '../assets/promo/promo_box_large.png';
 
   // Export props with defaults
   export let connector: IConnector;
@@ -22,6 +24,8 @@
   let loading = true;
   let config: any = null;
   let playerState: any = null;
+  let showTermsAndConditions = false;
+  let termsActiveTab = 'terms'; // 'terms' or 'conditions'
 
   onMount(async () => {
     try {
@@ -201,14 +205,35 @@
     }
   }
 
+  function openTermsAndConditions() {
+    showTermsAndConditions = true;
+  }
+
+  function closeTermsAndConditions() {
+    showTermsAndConditions = false;
+    termsActiveTab = 'terms';
+  }
+
+  function switchToTermsTab() {
+    termsActiveTab = 'terms';
+  }
+
+  function switchToConditionsTab() {
+    termsActiveTab = 'conditions';
+  }
+
   // Public method to close popup (can be called by connector)
   export function closePopup() {
     console.log('[FreeBetsPopup] closePopup() called externally');
-    visible = false;
+    if (showTermsAndConditions) {
+      closeTermsAndConditions();
+    } else {
+      visible = false;
+    }
   }
 </script>
 
-{#if !loading && visible}
+{#if !loading && visible && !showTermsAndConditions}
   <div 
     class="promo-modal-overlay"
     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2147483647 !important; pointer-events: auto;"
@@ -252,6 +277,10 @@
             {tr('freeBetsStartedEndDateMessage')}<b>{new Date(campaign.end).toLocaleString()}</b>
           </div>
         {/if}
+
+        <button type="button" class="promo-terms-link" on:click|stopPropagation={openTermsAndConditions}>
+          {tr('freeBetsStartedTermsAndConditionsMessage')}
+        </button>
       </div>
 
       <div class="promo-actions">
@@ -280,6 +309,85 @@
   </div>
 {/if}
 
+<!-- Terms and Conditions Box -->
+{#if !loading && visible && showTermsAndConditions}
+  <div 
+    class="promo-modal-overlay"
+    style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2147483647 !important; pointer-events: auto;"
+    transition:fade={{ duration: 200 }}
+  >
+    <section class="promo-terms-popup" role="dialog" aria-modal="true">
+      <div class="promo-terms-container">
+        <img class="promo-terms-banner" src={promoBanner} alt="" aria-hidden="true" />
+        <div class="promo-terms-content">
+          <img class="promo-terms-box" src={promoBoxLarge} alt="" aria-hidden="true" />
+          <div class="promo-terms-overlay">
+            <div class="promo-terms-tabs">
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'terms' ? 'active' : ''}"
+                on:click={switchToTermsTab}
+              >
+                Terms
+              </button>
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'conditions' ? 'active' : ''}"
+                on:click={switchToConditionsTab}
+              >
+                Conditions
+              </button>
+            </div>
+            
+            <div class="promo-terms-text">
+              {#if termsActiveTab === 'terms'}
+                <div class="promo-terms-content-text">
+                  <h3>Free Bets Terms</h3>
+                  <p><strong>How it works:</strong></p>
+                  <ul>
+                    <li>You have {freeBetsCount} free bets available</li>
+                    <li>Each free bet is worth {connector.formatCurrency(freeBetsAmount)}</li>
+                    <li>Use your free bets within the promotional period</li>
+                    <li>Winnings from free bets will be credited to your account</li>
+                  </ul>
+                  
+                  <p><strong>Important Notes:</strong></p>
+                  <ul>
+                    <li>Free bets cannot be withdrawn as cash</li>
+                    <li>Only winnings from successful free bets are withdrawable</li>
+                    <li>Free bets must be used in full - no partial amounts</li>
+                    <li>Unused free bets will expire at the end of the promotion</li>
+                  </ul>
+                </div>
+              {:else}
+                <div class="promo-terms-content-text">
+                  <h3>Terms and Conditions</h3>
+                  <p><strong>General Conditions:</strong></p>
+                  <ul>
+                    <li>This promotion is available to eligible players only</li>
+                    <li>Standard terms and conditions apply</li>
+                    <li>The operator reserves the right to modify or cancel this promotion</li>
+                    <li>Participants must be of legal gambling age</li>
+                  </ul>
+                  
+                  <p><strong>Disputes:</strong></p>
+                  <p>Any disputes regarding this promotion will be resolved in accordance with our standard terms of service.</p>
+                  
+                  {#if campaign.end}
+                    <p><strong>Promotion ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+            
+            <button class="promo-terms-close" on:click={closeTermsAndConditions}>
+              ×
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{/if}
+
 <style>
 :root{--primary-color: #7D4CDB;--background-front: #FFFFFF;--background-back: #EDEDED;--text-color: #000000;--secondary-text-color: #666666;--overlay-background: rgba(0, 0, 0, .5)}
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
@@ -298,6 +406,30 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
 .promo-image-button img.down{display:none}
+
+.promo-terms-link{position:absolute;left:50%;top:403px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+
+/* Terms and Conditions Box Styles */
+.promo-terms-popup{position:relative;width:500px;height:400px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
+.promo-terms-container{position:relative;width:500px;height:400px;display:flex;flex-direction:column}
+.promo-terms-banner{display:block;width:500px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/189}
+.promo-terms-content{position:relative;flex:1;display:flex;flex-direction:column;min-height:0}
+.promo-terms-box{display:block;width:600px;height:auto;object-fit:contain;flex:1;min-height:0;margin:0 auto}
+.promo-terms-overlay{position:absolute;inset:0;padding:15px;color:#000;display:flex;flex-direction:column}
+.promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0}
+.promo-terms-tab{background:#f0f0f0;border:1px solid #ccc;padding:6px 12px;cursor:pointer;border-radius:4px;font-size:11px;font-weight:600;transition:all 0.2s}
+.promo-terms-tab.active{background:#7D4CDB;color:white;border-color:#7D4CDB}
+.promo-terms-tab:hover{background:#e0e0e0}
+.promo-terms-tab.active:hover{background:#6a4cbf}
+.promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
+.promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
+.promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
+.promo-terms-content-text p{margin:0 0 8px 0}
+.promo-terms-content-text ul{margin:3px 0 10px 0;padding-left:16px}
+.promo-terms-content-text li{margin-bottom:3px}
+.promo-terms-content-text strong{color:#ffffff;font-weight:600}
+.promo-terms-close{position:absolute;top:8px;right:12px;background:rgba(0,0,0,0.7);color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0}
+.promo-terms-close:hover{background:rgba(0,0,0,0.9)}
 .promo-image-button:hover img.normal{display:none}
 .promo-image-button:hover img.hover{display:block}
 .promo-image-button:active img.normal,

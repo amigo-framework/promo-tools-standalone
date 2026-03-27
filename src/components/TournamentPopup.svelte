@@ -10,6 +10,8 @@
   import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
   import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
   import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
+  import promoBanner from '../assets/promo/promo_banner.png';
+  import promoBoxLarge from '../assets/promo/promo_box_large.png';
 
   export let connector: IConnector;
   export let campaign: Campaign;
@@ -24,6 +26,8 @@
   let config: any = null;
   let campaignState: any = null;
   let playerState: any = null;
+  let showTermsAndConditions = false;
+  let termsActiveTab = 'terms'; // 'terms' or 'conditions'
 
   onMount(async () => {
     try {
@@ -409,7 +413,24 @@
     dispatch('buttonClick');
   }
 
-  function openRulesPopup() {
+  function openTermsAndConditions() {
+    showTermsAndConditions = true;
+  }
+
+  function closeTermsAndConditions() {
+    showTermsAndConditions = false;
+    termsActiveTab = 'terms';
+  }
+
+  function switchToTermsTab() {
+    termsActiveTab = 'terms';
+  }
+
+  function switchToConditionsTab() {
+    termsActiveTab = 'conditions';
+  }
+
+  function getTermsContent() {
     const prizes = config?.prizes || [];
     const lines: string[] = [tr('tournamentRulesPrizesIntroMessage')];
 
@@ -439,23 +460,19 @@
     lines.push('');
     lines.push(tr('tournamentRulesOtherMessage'));
 
-    connector.ui().showPopup({
-      title: tr('tournamentRulesTitle'),
-      message: lines.join('\n'),
-      buttons: [{
-        label: tr('tournamentRulesCloseButton'),
-        secondary: true,
-        callback: () => {},
-      }],
-    });
+    return lines.join('\n');
   }
 
   export function closePopup() {
-    visible = false;
+    if (showTermsAndConditions) {
+      closeTermsAndConditions();
+    } else {
+      visible = false;
+    }
   }
 </script>
 
-{#if !loading && visible}
+{#if !loading && visible && !showTermsAndConditions}
   <div
     class="promo-modal-overlay"
     transition:fade={{ duration: 200 }}
@@ -520,7 +537,7 @@
         {/if}
 
         {#if mode !== 'finished'}
-          <button type="button" class="promo-terms-link" on:click|stopPropagation={openRulesPopup}>
+          <button type="button" class="promo-terms-link" on:click|stopPropagation={openTermsAndConditions}>
             {tr('tournamentStartedTermsAndConditionsMessage')}
           </button>
         {/if}
@@ -547,6 +564,77 @@
           <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
+      </div>
+    </section>
+  </div>
+{/if}
+
+<!-- Terms and Conditions Box -->
+{#if !loading && visible && showTermsAndConditions}
+  <div
+    class="promo-modal-overlay"
+    style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2147483647 !important; pointer-events: auto;"
+    transition:fade={{ duration: 200 }}
+  >
+    <section class="promo-terms-popup" role="dialog" aria-modal="true">
+      <div class="promo-terms-container">
+        <img class="promo-terms-banner" src={promoBanner} alt="" aria-hidden="true" />
+        <div class="promo-terms-content">
+          <img class="promo-terms-box" src={promoBoxLarge} alt="" aria-hidden="true" />
+          <div class="promo-terms-overlay">
+            <div class="promo-terms-tabs">
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'terms' ? 'active' : ''}"
+                on:click={switchToTermsTab}
+              >
+                Terms
+              </button>
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'conditions' ? 'active' : ''}"
+                on:click={switchToConditionsTab}
+              >
+                Conditions
+              </button>
+            </div>
+            
+            <div class="promo-terms-text">
+              {#if termsActiveTab === 'terms'}
+                <div class="promo-terms-content-text">
+                  <h3>Tournament Rules</h3>
+                  <div class="terms-content">
+                    {@html getTermsContent().replace(/\n/g, '<br>')}
+                  </div>
+                </div>
+              {:else}
+                <div class="promo-terms-content-text">
+                  <h3>Terms and Conditions</h3>
+                  <p><strong>Tournament Conditions:</strong></p>
+                  <ul>
+                    <li>This tournament is available to eligible players only</li>
+                    <li>Rankings are updated in real-time during the tournament</li>
+                    <li>Final rankings determine prize distribution</li>
+                    <li>Standard terms and conditions apply</li>
+                  </ul>
+                  
+                  <p><strong>Prize Conditions:</strong></p>
+                  <ul>
+                    <li>Prizes are awarded based on final tournament position</li>
+                    <li>Cash prizes are credited directly after tournament ends</li>
+                    <li>Tournament results are final and binding</li>
+                  </ul>
+                  
+                  {#if campaign.end}
+                    <p><strong>Tournament ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+            
+            <button class="promo-terms-close" on:click={closeTermsAndConditions}>
+              ×
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -630,4 +718,27 @@
     transform: scale(0.6);
   }
 }
+
+/* Terms and Conditions Box Styles */
+.promo-terms-popup{position:relative;width:500px;height:400px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
+.promo-terms-container{position:relative;width:500px;height:400px;display:flex;flex-direction:column}
+.promo-terms-banner{display:block;width:500px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/189}
+.promo-terms-content{position:relative;flex:1;display:flex;flex-direction:column;min-height:0}
+.promo-terms-box{display:block;width:600px;height:auto;object-fit:contain;flex:1;min-height:0;margin:0 auto}
+.promo-terms-overlay{position:absolute;inset:0;padding:15px;color:#000;display:flex;flex-direction:column}
+.promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0}
+.promo-terms-tab{background:#f0f0f0;border:1px solid #ccc;padding:6px 12px;cursor:pointer;border-radius:4px;font-size:11px;font-weight:600;transition:all 0.2s}
+.promo-terms-tab.active{background:#7D4CDB;color:white;border-color:#7D4CDB}
+.promo-terms-tab:hover{background:#e0e0e0}
+.promo-terms-tab.active:hover{background:#6a4cbf}
+.promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
+.promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
+.promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
+.promo-terms-content-text p{margin:0 0 8px 0}
+.promo-terms-content-text ul{margin:3px 0 10px 0;padding-left:16px}
+.promo-terms-content-text li{margin-bottom:3px}
+.promo-terms-content-text strong{color:#ffffff;font-weight:600}
+.terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
+.promo-terms-close{position:absolute;top:8px;right:12px;background:rgba(0,0,0,0.7);color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0}
+.promo-terms-close:hover{background:rgba(0,0,0,0.9)}
 </style>

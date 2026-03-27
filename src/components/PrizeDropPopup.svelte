@@ -10,6 +10,14 @@
   import promoRedBtnNormal from '../assets/buttons/promo_red_btn_normal.png';
   import promoRedBtnHover from '../assets/buttons/promo_red_btn_hover.png';
   import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
+  import promoBanner from '../assets/promo/promo_banner.png';
+  import promoBoxLarge from '../assets/promo/promo_box_large.png';
+  import tabBtnLargeNormal from '../assets/buttons/tab_btn_large_normal.png';
+  import tabBtnLargeHover from '../assets/buttons/tab_btn_large_hover.png';
+  import tabBtnLargeDown from '../assets/buttons/tab_btn_large_down.png';
+  import neutralBtnNormal from '../assets/buttons/neutral_btn_normal.png';
+  import neutralBtnHover from '../assets/buttons/neutral_btn_hover.png';
+  import neutralBtnDown from '../assets/buttons/neutral_btn_down.png';
 
   export let connector: IConnector;
   export let campaign: Campaign;
@@ -22,6 +30,8 @@
   let config: any = null;
   let campaignState: any = null;
   let playerState: any = null;
+  let showTermsAndConditions = false;
+  let termsActiveTab = 'terms'; // 'terms' or 'conditions'
 
   onMount(async () => {
     try {
@@ -230,7 +240,24 @@
     return safeFormatCurrency(totalWon);
   }
 
-  function openRulesPopup() {
+  function openTermsAndConditions() {
+    showTermsAndConditions = true;
+  }
+
+  function closeTermsAndConditions() {
+    showTermsAndConditions = false;
+    termsActiveTab = 'terms';
+  }
+
+  function switchToTermsTab() {
+    termsActiveTab = 'terms';
+  }
+
+  function switchToConditionsTab() {
+    termsActiveTab = 'conditions';
+  }
+
+  function getTermsContent() {
     const rulesPrizeLines = (effectiveConfig?.prizes || []).map((prize: any, index: number) => {
       const amountLeft = effectiveCampaignState?.amountsLeft?.[index] ?? 0;
       const rowLabel = tr('prizeDropStartedPrizesLeftMessage', {
@@ -248,7 +275,7 @@
       ? `${tr('prizeDropStartedEndDateMessage')}${new Date(campaign.end).toLocaleString()}`
       : '';
 
-    const message = [
+    return [
       tr('prizeDropRulesPrizesMessage'),
       ...rulesPrizeLines,
       qualifyingLine,
@@ -256,16 +283,6 @@
       '',
       tr('prizeDropRulesOtherMessage'),
     ].filter(Boolean).join('\n');
-
-    connector.ui().showPopup({
-      title: tr('prizeDropRulesTitle'),
-      message,
-      buttons: [{
-        label: tr('prizeDropRulesCloseButton'),
-        secondary: true,
-        callback: () => {},
-      }],
-    });
   }
 
   async function handleOptOut() {
@@ -307,7 +324,7 @@
   }
 </script>
 
-{#if !loading && visible}
+{#if !loading && visible && !showTermsAndConditions}
   <div 
     class="promo-modal-overlay"
     transition:fade={{ duration: 200 }}
@@ -365,7 +382,7 @@
         {/if}
 
         {#if mode === 'started' || mode === 'active'}
-          <button type="button" class="promo-terms-link" on:click|stopPropagation={openRulesPopup}>
+          <button type="button" class="promo-terms-link" on:click|stopPropagation={openTermsAndConditions}>
             {tr('prizeDropStartedTermsAndConditionsMessage')}
           </button>
         {/if}
@@ -392,6 +409,89 @@
           <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
+      </div>
+    </section>
+  </div>
+{/if}
+
+<!-- Terms and Conditions Box -->
+{#if !loading && visible && showTermsAndConditions}
+  <div 
+    class="promo-modal-overlay"
+    style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 2147483647 !important; pointer-events: auto;"
+    transition:fade={{ duration: 200 }}
+  >
+    <section class="promo-terms-popup" role="dialog" aria-modal="true">
+      <div class="promo-terms-container">
+        <div class="promo-banner-wrapper">
+          <img class="promo-terms-banner" src={promoBanner} alt="" aria-hidden="true" />
+          <div class="promo-banner-title">Terms and Conditions</div>
+        </div>
+        <div class="promo-terms-content">
+          <img class="promo-terms-box" src={promoBoxLarge} alt="" aria-hidden="true" />
+          <div class="promo-terms-overlay">
+            <div class="promo-terms-tabs">
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'terms' ? 'active' : ''}"
+                on:click={switchToTermsTab}
+              >
+                <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
+                <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
+                <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
+                <span class="tab-label">Terms</span>
+              </button>
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'conditions' ? 'active' : ''}"
+                on:click={switchToConditionsTab}
+              >
+                <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
+                <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
+                <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
+                <span class="tab-label">Conditions</span>
+              </button>
+            </div>
+            
+            <div class="promo-terms-text">
+              {#if termsActiveTab === 'terms'}
+                <div class="promo-terms-content-text">
+                  <h3>Prize Drop Rules</h3>
+                  <div class="terms-content">
+                    {@html getTermsContent().replace(/\n/g, '<br>')}
+                  </div>
+                </div>
+              {:else}
+                <div class="promo-terms-content-text">
+                  <h3>Terms and Conditions</h3>
+                  <p><strong>General Conditions:</strong></p>
+                  <ul>
+                    <li>This promotion is available to eligible players only</li>
+                    <li>Prizes are awarded randomly during gameplay</li>
+                    <li>Standard terms and conditions apply</li>
+                    <li>The operator reserves the right to modify or cancel this promotion</li>
+                  </ul>
+                  
+                  <p><strong>Prize Conditions:</strong></p>
+                  <ul>
+                    <li>Prizes must be claimed within the promotional period</li>
+                    <li>Cash prizes are credited directly to your account</li>
+                    <li>Some prizes may have additional wagering requirements</li>
+                  </ul>
+                  
+                  {#if campaign.end}
+                    <p><strong>Promotion ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+            
+            <button class="promo-terms-close" on:click={closeTermsAndConditions}>
+              <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
+              <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
+              <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
+              <span class="close-label">Close</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -479,5 +579,95 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
   .promo-image-popup {
     transform: scale(0.6);
   }
+}
+
+/* Terms and Conditions Box Styles */
+.promo-terms-popup{position:relative;width:1260px;height:730px;border-radius:16px;box-shadow:0 12px 33px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
+.promo-terms-container{position:relative;width:1260px;height:730px;display:flex;flex-direction:column}
+.promo-terms-banner{display:block;width:840px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/189;margin:0 auto;z-index:10;position:relative}
+.promo-banner-wrapper{position:relative;display:flex;justify-content:center}
+.promo-banner-title{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:23px;font-weight:bold;color:#ffffff;text-align:center;z-index:11;text-shadow:2px 2px 4px rgba(0,0,0,0.7);text-transform:uppercase}
+.promo-terms-content{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;transform:translateY(-65px)}
+.promo-terms-box{display:block;width:700px !important;height:auto;max-width:none !important;flex:1;min-height:0;margin:0 auto}
+.promo-terms-overlay{position:absolute;inset:0;padding:21px;color:#000;display:flex;flex-direction:column;width:700px;margin:0 auto}
+.promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0;margin-top:20px}
+.promo-terms-tab{position:relative;border:none;background:transparent;padding:0;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto}
+.promo-terms-tab img{display:block;width:50%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-tab img.hover{display:none}
+.promo-terms-tab img.down{display:none}
+.promo-terms-tab.active img.normal{display:none !important}
+.promo-terms-tab.active img.hover{display:none !important}
+.promo-terms-tab.active img.down{display:block !important}
+.promo-terms-tab:not(.active):hover img.normal{display:none !important}
+.promo-terms-tab:not(.active):hover img.hover{display:block !important}
+.promo-terms-tab:not(.active):hover img.down{display:none !important}
+.tab-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;font-weight:600;color:#ffffff;pointer-events:none;text-align:center;z-index:1}
+.promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
+.promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
+.promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
+.promo-terms-content-text p{margin:0 0 8px 0}
+.promo-terms-content-text ul{margin:3px 0 10px 0;padding-left:16px}
+.promo-terms-content-text li{margin-bottom:3px}
+.promo-terms-content-text strong{color:#ffffff;font-weight:600}
+.terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
+.promo-terms-close{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
+.promo-terms-close img{display:block;width:40%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-close img.hover{display:none}
+.promo-terms-close img.down{display:none}
+.promo-terms-close:hover img.normal{display:none}
+.promo-terms-close:hover img.hover{display:block}
+.promo-terms-close:active img.normal, .promo-terms-close:active img.hover{display:none}
+.promo-terms-close:active img.down{display:block}
+.close-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#ffffff;pointer-events:none;text-transform:uppercase}
+
+/* Media queries for responsive T&C popup scaling */
+@media (max-width: 1599px) {
+  .promo-terms-popup { width: 1050px; height: 625px; border-radius: 13px; }
+  .promo-terms-container { width: 1050px; height: 625px; }
+  .promo-terms-banner { width: 630px; }
+  .promo-terms-box { width: 520px !important; }
+  .promo-terms-overlay { width: 520px; padding: 19px; }
+  .promo-terms-content { transform: translateY(-52px); }
+}
+
+@media (max-width: 1199px) {
+  .promo-terms-popup { width: 840px; height: 520px; border-radius: 11px; }
+  .promo-terms-container { width: 840px; height: 520px; }
+  .promo-terms-banner { width: 625px; }
+  .promo-terms-box { width: 440px !important; }
+  .promo-terms-overlay { width: 440px; padding: 16px; }
+  .promo-terms-content { transform: translateY(-47px); }
+}
+
+@media (max-width: 767px) {
+  .promo-terms-popup { width: 630px; height: 415px; border-radius: 8px; }
+  .promo-terms-container { width: 630px; height: 415px; }
+  .promo-terms-banner { width: 420px; }
+  .promo-terms-box { width: 350px !important; }
+  .promo-terms-overlay { width: 350px; padding: 13px; }
+  .promo-terms-content { transform: translateY(-36px); }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .promo-terms-popup { width: 567px; height: 374px; border-radius: 7px; }
+  .promo-terms-container { width: 567px; height: 374px; }
+  .promo-terms-banner { width: 378px; }
+  .promo-banner-title { font-size: 20px; }
+  .promo-terms-box { width: 315px !important; }
+  .promo-terms-overlay { width: 315px; padding: 12px; }
+  .promo-terms-content { transform: translateY(-32px); }
+  .promo-terms-close { bottom: -10px; }
+}
+
+@media (max-width: 479px) {
+  .promo-terms-popup { width: 420px; height: 491px; border-radius: 6px; }
+  .promo-terms-container { width: 420px; height: 491px; }
+  .promo-terms-banner { width: 395px; }
+  .promo-banner-title { font-size: 16px; }
+  .promo-terms-box { width: 280px !important; }
+  .promo-terms-overlay { width: 280px; padding: 11px; }
+  .promo-terms-content { transform: translateY(-33px); }
+  .promo-terms-tab img { width: 65%; }
+  .promo-terms-close { bottom: -9px; }
 }
 </style>
