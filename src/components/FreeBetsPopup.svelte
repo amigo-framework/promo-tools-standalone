@@ -13,6 +13,12 @@
   import promoRedBtnDown from '../assets/buttons/promo_red_btn_down.png';
   import promoBanner from '../assets/promo/promo_banner.png';
   import promoBoxLarge from '../assets/promo/promo_box_large.png';
+  import tabBtnLargeNormal from '../assets/buttons/tab_btn_large_normal.png';
+  import tabBtnLargeHover from '../assets/buttons/tab_btn_large_hover.png';
+  import tabBtnLargeDown from '../assets/buttons/tab_btn_large_down.png';
+  import neutralBtnNormal from '../assets/buttons/neutral_btn_normal.png';
+  import neutralBtnHover from '../assets/buttons/neutral_btn_hover.png';
+  import neutralBtnDown from '../assets/buttons/neutral_btn_down.png';
 
   // Export props with defaults
   export let connector: IConnector;
@@ -246,7 +252,7 @@
       aria-modal="true"
       aria-labelledby="popup-title"
     >
-      <div class="promo-image-container">
+      <div class="promo-images-container">
         <img class="promo-image-top" src={promoTopFreespin} alt="" aria-hidden="true" />
         <img class="promo-image-bottom" src={promoBoxSmall} alt="" aria-hidden="true" />
       </div>
@@ -280,7 +286,7 @@
         {/if}
 
         <button type="button" class="promo-terms-link" on:click|stopPropagation={openTermsAndConditions}>
-          {tr('freeBetsStartedTermsAndConditionsMessage')}
+          {tr('termsAndConditions')}
         </button>
       </div>
 
@@ -319,7 +325,10 @@
   >
     <section class="promo-terms-popup" role="dialog" aria-modal="true">
       <div class="promo-terms-container">
-        <img class="promo-terms-banner" src={promoBanner} alt="" aria-hidden="true" />
+        <div class="promo-banner-wrapper">
+          <img class="promo-terms-banner" src={promoBanner} alt="" aria-hidden="true" />
+          <div class="promo-banner-title">Terms and Conditions</div>
+        </div>
         <div class="promo-terms-content">
           <img class="promo-terms-box" src={promoBoxLarge} alt="" aria-hidden="true" />
           <div class="promo-terms-overlay">
@@ -328,13 +337,19 @@
                 class="promo-terms-tab {termsActiveTab === 'terms' ? 'active' : ''}"
                 on:click={switchToTermsTab}
               >
-                Terms
+                <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
+                <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
+                <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
+                <span class="tab-label">Terms</span>
               </button>
               <button 
                 class="promo-terms-tab {termsActiveTab === 'conditions' ? 'active' : ''}"
                 on:click={switchToConditionsTab}
               >
-                Conditions
+                <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
+                <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
+                <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
+                <span class="tab-label">Conditions</span>
               </button>
             </div>
             
@@ -380,7 +395,10 @@
             </div>
             
             <button class="promo-terms-close" on:click={closeTermsAndConditions}>
-              ×
+              <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
+              <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
+              <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
+              <span class="close-label">Close</span>
             </button>
           </div>
         </div>
@@ -394,54 +412,33 @@
 body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--background-back: #333333;--text-color: #FFFFFF;--secondary-text-color: #CCCCCC}
 .promo-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--overlay-background);display:flex;align-items:center;justify-content:center;z-index:999999 !important}
 .promo-image-popup{position:relative;width:600px;height:470px;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
-.promo-image-container{position:relative;width:400px;height:470px;display:flex;flex-direction:column;transform:translateY(-10px)}
-.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681;margin:0 auto;position:relative;z-index:2}
+.promo-images-container{display:flex;flex-direction:column;width:600px;height:467px;transform:translateY(-7px)}
+.promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681;margin:0 auto;position:relative;z-index:2;transform:translateY(-50px)}
 .promo-image-bottom{display:block;width:600px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352;margin:0 auto;transform:translateY(-100px)}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-fs-hero{position:absolute;left:55%;top:110px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
-.promo-title{position:absolute;left:50%;top:173px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:213px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-end-date{position:absolute;left:50%;top:389px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:12px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
+.promo-fs-hero{position:absolute;left:55%;top:75px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
+.promo-title{position:absolute;left:50%;top:175px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-end-date{position:absolute;left:50%;top:370px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:40px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
 .promo-image-button img.down{display:none}
-
-.promo-terms-link{position:absolute;left:50%;top:403px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-
-/* Terms and Conditions Box Styles */
-.promo-terms-popup{position:relative;width:500px;height:400px;border-radius:10px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
-.promo-terms-container{position:relative;width:500px;height:400px;display:flex;flex-direction:column}
-.promo-terms-banner{display:block;width:500px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/189}
-.promo-terms-content{position:relative;flex:1;display:flex;flex-direction:column;min-height:0}
-.promo-terms-box{display:block;width:600px;height:auto;object-fit:contain;flex:1;min-height:0;margin:0 auto}
-.promo-terms-overlay{position:absolute;inset:0;padding:15px;color:#000;display:flex;flex-direction:column}
-.promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0}
-.promo-terms-tab{background:#f0f0f0;border:1px solid #ccc;padding:6px 12px;cursor:pointer;border-radius:4px;font-size:11px;font-weight:600;transition:all 0.2s}
-.promo-terms-tab.active{background:#7D4CDB;color:white;border-color:#7D4CDB}
-.promo-terms-tab:hover{background:#e0e0e0}
-.promo-terms-tab.active:hover{background:#6a4cbf}
-.promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
-.promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
-.promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
-.promo-terms-content-text p{margin:0 0 8px 0}
-.promo-terms-content-text ul{margin:3px 0 10px 0;padding-left:16px}
-.promo-terms-content-text li{margin-bottom:3px}
-.promo-terms-content-text strong{color:#ffffff;font-weight:600}
-.promo-terms-close{position:absolute;top:8px;right:12px;background:rgba(0,0,0,0.7);color:white;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;transition:background 0.2s;flex-shrink:0}
-.promo-terms-close:hover{background:rgba(0,0,0,0.9)}
 .promo-image-button:hover img.normal{display:none}
 .promo-image-button:hover img.hover{display:block}
 .promo-image-button:active img.normal,
 .promo-image-button:active img.hover{display:none}
 .promo-image-button:active img.down{display:block}
-.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
+.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important;pointer-events:none}
 .promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
-.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:315px;width:max-content;transform:translateX(-50%);margin:0}
+.promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:275px;width:max-content;transform:translateX(-50%);margin:0}
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
 .promo-info-label{font-size:9px;color:#fff;opacity:.95;margin-bottom:3px}
 .promo-info-value{font-size:20px;font-weight:700;color:#fff}
+
+.promo-terms-link{position:absolute;left:50%;top:379px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+
 /* Responsive scaling */
 @media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {
@@ -488,6 +485,175 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 @media (max-width: 320px) or (max-height: 300px) {
   .promo-image-popup {
     transform: scale(0.6);
+  }
+}
+/* Terms and Conditions Box Styles */
+.promo-terms-popup{position:relative;width:1260px;height:730px;border-radius:16px;box-shadow:0 12px 33px rgba(0,0,0,.35);font-family:Helvetica,Arial,sans-serif;background:transparent;transform-origin:center center}
+.promo-terms-container{position:relative;width:1260px;height:730px;display:flex;flex-direction:column}
+.promo-terms-banner{display:block;width:840px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/189;margin:0 auto;z-index:10;position:relative}
+.promo-banner-wrapper{position:relative;display:flex;justify-content:center}
+.promo-banner-title{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:23px;font-weight:bold;color:#ffffff;text-align:center;z-index:11;text-shadow:2px 2px 4px rgba(0,0,0,0.7);text-transform:uppercase}
+.promo-terms-content{position:relative;flex:1;display:flex;flex-direction:column;min-height:0;transform:translateY(-65px)}
+.promo-terms-box{display:block;width:700px !important;height:auto;max-width:none !important;flex:1;min-height:0;margin:0 auto}
+.promo-terms-overlay{position:absolute;inset:0;padding:21px;color:#000;display:flex;flex-direction:column;width:700px;margin:0 auto}
+.promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0;margin-top:20px}
+.promo-terms-tab{position:relative;border:none;background:transparent;padding:0;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto}
+.promo-terms-tab img{display:block;width:50%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-tab img.hover{display:none}
+.promo-terms-tab img.down{display:none}
+.promo-terms-tab.active img.normal{display:none !important}
+.promo-terms-tab.active img.hover{display:none !important}
+.promo-terms-tab.active img.down{display:block !important}
+.promo-terms-tab:not(.active):hover img.normal{display:none !important}
+.promo-terms-tab:not(.active):hover img.hover{display:block !important}
+.promo-terms-tab:not(.active):hover img.down{display:none !important}
+.tab-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;font-weight:600;color:#ffffff;pointer-events:none;text-align:center;z-index:1}
+.promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
+.promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
+.promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
+.promo-terms-content-text p{margin:0 0 8px 0}
+.promo-terms-content-text ul{margin:3px 0 10px 0;padding-left:16px}
+.promo-terms-content-text li{margin-bottom:3px}
+.promo-terms-content-text strong{color:#ffffff;font-weight:600}
+.terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
+.promo-terms-close{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
+.promo-terms-close img{display:block;width:40%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-close img.hover{display:none}
+.promo-terms-close img.down{display:none}
+.promo-terms-close:hover img.normal{display:none}
+.promo-terms-close:hover img.hover{display:block}
+.promo-terms-close:active img.normal, .promo-terms-close:active img.hover{display:none}
+.promo-terms-close:active img.down{display:block}
+.close-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#ffffff;pointer-events:none;text-transform:uppercase}
+
+/* Media queries for responsive T&C popup scaling */
+@media (max-width: 1599px) {
+  .promo-terms-popup { width: 1050px; height: 625px; border-radius: 13px; }
+  .promo-terms-container { width: 1050px; height: 625px; }
+  .promo-terms-banner { width: 630px; }
+  .promo-terms-box { width: 520px !important; }
+  .promo-terms-overlay { width: 520px; padding: 19px; }
+  .promo-terms-content { transform: translateY(-52px); }
+}
+
+@media (max-width: 1199px) {
+  .promo-terms-popup { width: 840px; height: 520px; border-radius: 11px; }
+  .promo-terms-container { width: 840px; height: 520px; }
+  .promo-terms-banner { width: 625px; }
+  .promo-terms-box { width: 440px !important; }
+  .promo-terms-overlay { width: 440px; padding: 16px; }
+  .promo-terms-content { transform: translateY(-47px); }
+}
+
+@media (max-width: 767px) {
+  .promo-terms-popup { width: 630px; height: 415px; border-radius: 8px; }
+  .promo-terms-container { width: 630px; height: 415px; }
+  .promo-terms-banner { width: 420px; }
+  .promo-terms-box { width: 350px !important; }
+  .promo-terms-overlay { width: 350px; padding: 13px; }
+  .promo-terms-content { transform: translateY(-36px); }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .promo-terms-popup { width: 567px; height: 374px; border-radius: 7px; }
+  .promo-terms-container { width: 567px; height: 374px; }
+  .promo-terms-banner { width: 378px; }
+  .promo-banner-title { font-size: 20px; }
+  .promo-terms-box { width: 315px !important; }
+  .promo-terms-overlay { width: 315px; padding: 12px; }
+  .promo-terms-content { transform: translateY(-32px); }
+  .promo-terms-close { bottom: -10px; }
+}
+
+@media (max-width: 479px) {
+  .promo-terms-popup { width: 420px; height: 491px; border-radius: 6px; }
+  .promo-terms-container { width: 420px; height: 491px; }
+  .promo-terms-banner { width: 395px; }
+  .promo-banner-title { font-size: 16px; }
+  .promo-terms-box { width: 280px !important; }
+  .promo-terms-overlay { width: 280px; padding: 11px; }
+  .promo-terms-content { transform: translateY(-33px); }
+  .promo-terms-tab img { width: 65%; }
+  .promo-terms-close { bottom: -9px; }
+}
+
+/* Responsive scaling  */
+@media (min-width: 700px) and (max-width: 1199px) {
+  .promo-image-popup {
+    transform: scale(1.2);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .promo-image-popup {
+    transform: scale(1.4);
+  }
+}
+
+@media (min-width: 1600px) {
+  .promo-image-popup {
+    transform: scale(1.6);
+  }
+}
+
+@media (min-width: 2000px) {
+  .promo-image-popup {
+    transform: scale(1.8);
+  }
+}
+
+@media (max-width: 399px) {
+  .promo-image-popup {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-height: 460px) {
+  .promo-image-popup {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-height: 368px) {
+  .promo-image-popup {
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 320px) or (max-height: 280px) {
+  .promo-image-popup {
+    width: 400px;
+    transform: scale(0.6);
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .promo-image-top { 
+    transform: translateY(-30px);
+    margin: 0 auto;
+  }
+  .promo-image-bottom { 
+    transform: translateY(-80px);
+    margin: 0 auto;
+  }
+  .promo-title { top: 195px; }
+  .promo-image-message { top: 239px; }
+  .promo-win-value { top: 257px; }
+  .promo-actions { bottom: 20px; }
+}
+
+@media (max-width: 479px) {
+  .promo-image-popup {
+    width: 600px;
+    transform: scale(1.0);
+  }
+  .promo-image-top {
+    width: 400px;
+    margin: 0 auto;
+  }
+  .promo-image-bottom {
+    width: 600px;
+    margin: 0 auto;
   }
 }
 </style>
