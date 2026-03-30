@@ -1,8 +1,6 @@
 import type { IPromoTool, IConnector, Campaign } from '@/interfaces/IPromoTool';
 import { SvelteOverlayManager } from '@/shared/SvelteComponents';
 
-const TournamentHeaderIcon = () => '🏆';
-
 export class TournamentTool implements IPromoTool {
   private activeCampaignId: string | null = null;
   private activeCampaignInfo: {playerRank: number | string; totalPositions: number} | null = null;
@@ -87,25 +85,6 @@ export class TournamentTool implements IPromoTool {
     this.overlayManager.destroy();
   }
 
-  private tr(key: string, opts?: Record<string, any>): string {
-    const i18nCandidates = [
-      (window as any)?.i18next,
-      (window as any)?.__i18next,
-      (window as any)?.I18NEXT,
-    ].filter(Boolean);
-
-    for (const i18n of i18nCandidates) {
-      if (i18n?.t) {
-        const value = i18n.t(key, opts);
-        if (typeof value === 'string' && value !== key) {
-          return value;
-        }
-      }
-    }
-
-    return key;
-  }
-
   private async showStartedCampaignPopup(connector: IConnector, campaign: Campaign, _config: any, _campaignState: any, _playerState: any, resolve: (value: any) => void) {
     const result = await this.overlayManager.showTournamentPopup(connector, campaign, 'started', {
       config: _config,
@@ -171,11 +150,16 @@ export class TournamentTool implements IPromoTool {
     const totalPositions = roundIds.length;
     this.activeCampaignInfo = { playerRank, totalPositions };
 
-    if (connector.ui && typeof connector.ui === 'function') {
-      const ui = connector.ui();
-      if (ui.addPromoHeader) {
-        ui.addPromoHeader('tournament', TournamentHeaderIcon, `${playerRank}/${totalPositions}`, this.tr('tournamentHeaderRank'));
-      }
+    // Use custom widget instead of addPromoHeader
+    if (typeof window !== 'undefined' && (window as any).addPromoWidget) {
+      (window as any).addPromoWidget(
+        connector,
+        'tournament',
+        _campaign,
+        _config,
+        { leaderboard: roundIds.map((_: any, index: number) => ({ playerId: `player_${index}` })) },
+        { playerId: 'currentPlayer' }
+      );
     }
   }
 }

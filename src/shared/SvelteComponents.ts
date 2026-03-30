@@ -1,12 +1,15 @@
 import PrizeDropPopup from '../components/PrizeDropPopup.svelte';
 import FreeBetsPopup from '../components/FreeBetsPopup.svelte';
 import TournamentPopup from '../components/TournamentPopup.svelte';
+import WidgetManager from '../components/WidgetManager.svelte';
 import type { IConnector, Campaign } from '../interfaces/IPromoTool';
 
 export class SvelteOverlayManager {
   private static instance: SvelteOverlayManager | null = null;
   private container: HTMLDivElement | null = null;
   private currentComponent: any = null;
+  private widgetManager: any = null;
+  private widgetContainer: HTMLDivElement | null = null;
 
   static getInstance(): SvelteOverlayManager {
     if (!SvelteOverlayManager.instance) {
@@ -39,6 +42,30 @@ export class SvelteOverlayManager {
       console.log('[SvelteOverlayManager] Body children count:', document.body.children.length);
     } else {
       console.log('[SvelteOverlayManager] Container already exists');
+    }
+
+    // Initialize widget container
+    if (!this.widgetContainer) {
+      console.log('[SvelteOverlayManager] Creating widget container');
+      this.widgetContainer = document.createElement('div');
+      this.widgetContainer.id = 'promo-tools-widgets';
+      this.widgetContainer.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 999998 !important;
+        pointer-events: none !important;
+      `;
+      document.body.appendChild(this.widgetContainer);
+      
+      // Initialize widget manager
+      this.widgetManager = new WidgetManager({
+        target: this.widgetContainer,
+        props: { connector: null } // Will be set when needed
+      });
+      console.log('[SvelteOverlayManager] WidgetManager initialized');
     }
   }
 
@@ -150,6 +177,16 @@ export class SvelteOverlayManager {
       this.container.parentNode.removeChild(this.container);
       this.container = null;
     }
+    
+    // Destroy widget manager
+    if (this.widgetManager) {
+      this.widgetManager.$destroy();
+      this.widgetManager = null;
+    }
+    if (this.widgetContainer && this.widgetContainer.parentNode) {
+      this.widgetContainer.parentNode.removeChild(this.widgetContainer);
+      this.widgetContainer = null;
+    }
   }
 
   // Public method to close current popup
@@ -160,6 +197,63 @@ export class SvelteOverlayManager {
     } else {
       // Fallback: clear component
       this.clearCurrentComponent();
+    }
+  }
+
+  // Widget management methods
+  addPromoWidget(
+    connector: IConnector,
+    type: 'freeBets' | 'prizeDrop' | 'tournament',
+    campaign: Campaign,
+    config: any,
+    campaignState: any,
+    playerState: any
+  ): void {
+    console.log('[SvelteOverlayManager] addPromoWidget called:', {
+      type,
+      campaign: campaign?.campaignId,
+      connector: !!connector,
+      config: !!config,
+      campaignState: !!campaignState,
+      playerState: !!playerState,
+      widgetManagerExists: !!this.widgetManager
+    });
+    if (this.widgetManager) {
+      // Update connector prop
+      this.widgetManager.$set({ connector });
+      this.widgetManager.addPromoWidget(type, campaign, config, campaignState, playerState);
+    } else {
+      console.error('[SvelteOverlayManager] Widget manager not initialized!');
+    }
+  }
+
+  removePromoWidget(type: 'freeBets' | 'prizeDrop' | 'tournament'): void {
+    console.log('[SvelteOverlayManager] removePromoWidget called:', type);
+    if (this.widgetManager) {
+      this.widgetManager.removePromoWidget(type);
+    }
+  }
+
+  updatePromoWidget(
+    connector: IConnector,
+    type: 'freeBets' | 'prizeDrop' | 'tournament',
+    campaign: Campaign,
+    config: any,
+    campaignState: any,
+    playerState: any
+  ): void {
+    console.log('[SvelteOverlayManager] updatePromoWidget called:', type);
+    if (this.widgetManager) {
+      // Update connector prop
+      this.widgetManager.$set({ connector });
+      this.widgetManager.updatePromoWidget(type, campaign, config, campaignState, playerState);
+    }
+  }
+
+  clearAllWidgets(): void {
+    console.log('[SvelteOverlayManager] clearAllWidgets called');
+    if (this.widgetManager) {
+      this.widgetManager.clearAllWidgets();
     }
   }
 }

@@ -1,8 +1,6 @@
 import type { IPromoTool, IConnector, Campaign } from '@/interfaces/IPromoTool';
 import { SvelteOverlayManager } from '@/shared/SvelteComponents';
 
-const EmptyHeaderIcon = () => null;
-
 export class FreeBetsTool implements IPromoTool {
   private activeCampaignId: string | null = null;
   private activeCampaignInfo: {used: number; total: number} | null = null;
@@ -125,6 +123,12 @@ export class FreeBetsTool implements IPromoTool {
       await _connector.acknowledgeCampaign(campaign.campaignId);
       _connector.ui().removePromoHeader('freeBets');
       _connector.callbacks?.unfreezeBet && _connector.callbacks.unfreezeBet();
+      
+      // Remove widget in standalone mode
+      if (typeof window !== 'undefined' && (window as any).removePromoWidget) {
+        (window as any).removePromoWidget('freeBets');
+      }
+      
       window.dispatchEvent(new CustomEvent('UPDATE_BALANCE_PREPAID_CAMPAIGN'));
       this.activeCampaignId = null;
       resolve({shouldIgnore: false, shouldRefresh: true});
@@ -139,17 +143,16 @@ export class FreeBetsTool implements IPromoTool {
     const total = _config?.bets || 0;
     this.activeCampaignInfo = { used, total };
 
-    if (connector.ui && typeof connector.ui === 'function') {
-      const ui = connector.ui();
-      if (ui.addPromoHeader) {
-        ui.addPromoHeader(
-          'freeBets',
-          EmptyHeaderIcon,
-          `${used}/${total}`,
-          'Free Bets',
-          () => this.showActiveCampaignPopup(connector, _campaign, () => undefined)
-        );
-      }
+    // Use custom widget instead of addPromoHeader
+    if (typeof window !== 'undefined' && (window as any).addPromoWidget) {
+      (window as any).addPromoWidget(
+        connector,
+        'freeBets',
+        _campaign,
+        { amount: total },
+        null,
+        { available: total - used }
+      );
     }
   }
 }

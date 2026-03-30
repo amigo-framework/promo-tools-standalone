@@ -67,7 +67,7 @@
   $: effectiveConfig = config || (campaign as any)?.config || null;
   $: effectiveCampaignState = campaignState || (campaign as any)?.campaignState || null;
   $: effectivePlayerState = playerState || (campaign as any)?.playerState || null;
-  $: prizesToShow = getPrizesToShow(effectiveConfig, effectiveCampaignState);
+  $: prizesToShow = Array.isArray(getPrizesToShow(effectiveConfig, effectiveCampaignState)) ? getPrizesToShow(effectiveConfig, effectiveCampaignState) : [];
   $: prizesNotShownLeft = getPrizesNotShownLeft(prizesToShow, effectiveCampaignState);
   $: summaryPrizeValue = getSummaryPrizeValue(prizesToShow, effectiveConfig, effectiveCampaignState, effectivePlayerState);
   $: finishedTotalWonValue = getFinishedTotalWonValue(effectivePlayerState);
@@ -116,7 +116,9 @@
   }
 
   function getPrizesToShow(currentConfig: any, currentCampaignState: any) {
-    if (!currentConfig?.prizes?.length) return [];
+    if (!currentConfig?.prizes || !Array.isArray(currentConfig.prizes) || !currentConfig.prizes.length) {
+      return [];
+    }
     return currentConfig.prizes
       .map((prize: any, index: number) => ({
         ...prize,
@@ -127,9 +129,10 @@
   }
 
   function getPrizesNotShownLeft(visiblePrizes: any[], currentCampaignState: any): number {
-    if (!currentCampaignState?.amountsLeft?.length) return 0;
-    const totalLeft = currentCampaignState.amountsLeft.reduce((sum: number, amountLeft: number) => sum + amountLeft, 0);
-    const shownLeft = visiblePrizes.reduce((sum: number, detailedPrize: any) => sum + (detailedPrize.amountLeft || 0), 0);
+    const amountsLeft = Array.isArray(currentCampaignState?.amountsLeft) ? currentCampaignState.amountsLeft : [];
+    if (!amountsLeft.length) return 0;
+    const totalLeft = amountsLeft.reduce((sum: number, amountLeft: number) => sum + amountLeft, 0);
+    const shownLeft = Array.isArray(visiblePrizes) ? visiblePrizes.reduce((sum: number, detailedPrize: any) => sum + (detailedPrize.amountLeft || 0), 0) : 0;
     return totalLeft - shownLeft;
   }
 
@@ -154,10 +157,10 @@
   }
 
   function getSummaryPrizeValue(_visiblePrizes: any[], currentConfig: any, currentCampaignState: any, currentPlayerState: any): string {
-    const prizes = currentConfig?.prizes || [];
+    const prizes = Array.isArray(currentConfig?.prizes) ? currentConfig.prizes : [];
     if (!prizes.length) return '0x:$0.00';
 
-    const amountsLeft = currentCampaignState?.amountsLeft || [];
+    const amountsLeft = Array.isArray(currentCampaignState?.amountsLeft) ? currentCampaignState.amountsLeft : [];
     const activeIndex = amountsLeft.findIndex((value: number) => Number(value) > 0);
     const index = activeIndex >= 0 ? activeIndex : 0;
     const prize = prizes[index] || prizes[0];
@@ -259,7 +262,8 @@
   }
 
   function getTermsContent() {
-    const rulesPrizeLines = (effectiveConfig?.prizes || []).map((prize: any, index: number) => {
+    const prizes = Array.isArray(effectiveConfig?.prizes) ? effectiveConfig.prizes : [];
+    const rulesPrizeLines = prizes.map((prize: any, index: number) => {
       const amountLeft = effectiveCampaignState?.amountsLeft?.[index] ?? 0;
       const rowLabel = tr('prizeDropStartedPrizesLeftMessage', {
         amountLeft,
@@ -362,7 +366,7 @@
 
         {#if mode === 'started' || mode === 'active'}
           <div class="promo-prizes-list">
-            {#each prizesToShow as prize, index}
+            {#each (Array.isArray(prizesToShow) ? prizesToShow : []) as prize, index}
               <div class="promo-prize-item">
                 <span class="promo-prize-left">
                   {tr('prizeDropStartedPrizesLeftMessage', { 

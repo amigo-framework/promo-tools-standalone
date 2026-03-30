@@ -97,7 +97,7 @@
   $: freeBetsCount = config ? (config.bets - (playerState?.used || 0)) : 0;
   $: freeBetsAmount = playerState?.amount || config?.amount || 0;
   $: freeBetsLabel = tr('freeBetsSpins');
-  $: betAmountLabel = tr('betAmount');
+  $: betAmountLabel = tr('bet');
   $: {
     console.log('[FreeBetsPopup] 🔥 Reactive values updated:', {
       freeBetsCount,
@@ -113,6 +113,18 @@
   $: primaryButtonLabel = mode === 'started' ? tr('start') : tr('continue');
   $: secondaryButtonLabel = connector.settings?.closePromoOptOut === 'true' ? tr('close') : tr('optOut');
   $: showOptOutButton = mode === 'started' && connector.settings?.hidePromoOptOut !== 'true';
+  
+  // Use neutral buttons for active and finished modes, green button only for started mode
+  $: primaryButtonImages = mode === 'started' ? {
+    normal: promoGreenBtnNormal,
+    hover: promoGreenBtnHover,
+    down: promoGreenBtnDown
+  } : {
+    normal: neutralBtnNormal,
+    hover: neutralBtnHover,
+    down: neutralBtnDown
+  };
+  
   let primaryButtonState: 'normal' | 'hover' | 'down' = 'normal';
   let secondaryButtonState: 'normal' | 'hover' | 'down' = 'normal';
 
@@ -132,7 +144,7 @@
 
   function getTitle(): string {
     if (mode === 'finished') return tr('freeBetsFinishedTitle');
-    if (mode === 'active') return tr('freeBetsActiveTitle');
+    if (mode === 'active') return tr('freeBetsIntroTitle'); // Reuse started title for active mode
     return tr('freeBetsIntroTitle');
   }
 
@@ -147,7 +159,13 @@
       });
     }
     if (mode === 'active') {
-      return tr('freeBetsActiveMessage');
+      // Reuse started message for active mode
+      const spins = config?.bets ? (config.bets - (playerState?.used || 0)) : 0;
+      const bet = config?.amount || playerState?.amount || 0;
+      return tr('freeBetsIntroMessage', {
+        spins,
+        bet: connector.formatCurrency(bet),
+      });
     }
     // mode === 'started'
     const spins = config?.bets || 0;
@@ -184,14 +202,23 @@
     event.preventDefault(); // Prevent any default behavior
     console.log('[FreeBetsPopup] handleStart called, mode:', mode);
 
-    // In active mode, close the popup without sending buttonClick to connector
-    // to avoid React promo UI race conditions.
+    // In finished mode, acknowledge the campaign and close
+    if (mode === 'finished') {
+      visible = false;
+      setTimeout(() => {
+        console.log('[FreeBetsPopup] Dispatching buttonClick event (finished mode)');
+        dispatch('buttonClick');
+      }, 200);
+      return;
+    }
+
+    // In active mode, just close the popup to let user continue playing
     if (mode === 'active') {
       visible = false;
       setTimeout(() => {
         console.log('[FreeBetsPopup] Dispatching close event (active mode)');
         dispatch('close');
-      }, 0);
+      }, 200);
       return;
     }
 
@@ -207,8 +234,13 @@
 
   function handleBackdropClick(event: MouseEvent) {
     console.log('[FreeBetsPopup] handleBackdropClick called');
-    if (event.target === event.currentTarget && showOptOutButton) {
-      handleOptOut();
+    if (event.target === event.currentTarget) {
+      // Always allow closing via backdrop for any mode
+      visible = false;
+      setTimeout(() => {
+        console.log('[FreeBetsPopup] Dispatching close event (backdrop click)'); 
+        dispatch('close');
+      }, 200);
     }
   }
 
@@ -286,7 +318,7 @@
         {/if}
 
         <button type="button" class="promo-terms-link" on:click|stopPropagation={openTermsAndConditions}>
-          {tr('termsAndConditions')}
+          {tr('terms')}
         </button>
       </div>
 
@@ -306,9 +338,9 @@
           class="promo-image-button"
           on:click={handleStart}
         >
-          <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
-          <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
-          <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
+          <img class="normal" src={primaryButtonImages.normal} alt="" aria-hidden="true" />
+          <img class="hover" src={primaryButtonImages.hover} alt="" aria-hidden="true" />
+          <img class="down" src={primaryButtonImages.down} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
       </div>
@@ -418,9 +450,9 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-fs-hero{position:absolute;left:55%;top:75px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
 .promo-title{position:absolute;left:50%;top:175px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
-.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:10px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-end-date{position:absolute;left:50%;top:370px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:40px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:45px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -430,8 +462,8 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button:active img.normal,
 .promo-image-button:active img.hover{display:none}
 .promo-image-button:active img.down{display:block}
-.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important;pointer-events:none}
-.promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
+.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#ffffff !important;pointer-events:none}
+.promo-image-button.secondary .promo-image-button-label{color:#ffffff !important}
 .promo-info-grid{display:flex;justify-content:center;align-items:center;gap:25px;position:absolute;left:50%;top:275px;width:max-content;transform:translateX(-50%);margin:0}
 .promo-info-card{background:transparent;padding:0;border-radius:0;text-align:center;backdrop-filter:none}
 .promo-info-label{font-size:9px;color:#fff;opacity:.95;margin-bottom:3px}

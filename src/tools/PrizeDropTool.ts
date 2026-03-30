@@ -1,8 +1,6 @@
 import type { IPromoTool, IConnector, Campaign } from '@/interfaces/IPromoTool';
 import { SvelteOverlayManager } from '@/shared/SvelteComponents';
 
-const EmptyHeaderIcon = () => null;
-
 export class PrizeDropTool implements IPromoTool {
   private activeCampaignId: string | null = null;
   private activeCampaignInfo: {left: number; total: number} | null = null;
@@ -169,15 +167,35 @@ export class PrizeDropTool implements IPromoTool {
   }
 
   private updateActiveCampaignHeader(connector: IConnector, _campaign: Campaign, _config: any, campaignState: any, _playerState: any) {
-    const prizesLeft = campaignState.amountsLeft.reduce((sum: number, amount: number) => sum + amount, 0);
-    const totalPrizes = campaignState.amountsLeft.length;
+    // Ensure campaignState.amountsLeft is an array
+    const amountsLeft = Array.isArray(campaignState?.amountsLeft) ? campaignState.amountsLeft : [];
+    const prizesLeft = amountsLeft.reduce((sum: number, amount: number) => sum + amount, 0);
+    const totalPrizes = amountsLeft.length;
     this.activeCampaignInfo = { left: prizesLeft, total: totalPrizes };
 
-    if (connector.ui && typeof connector.ui === 'function') {
-      const ui = connector.ui();
-      if (ui.addPromoHeader) {
-        ui.addPromoHeader('prizeDrop', EmptyHeaderIcon, `${prizesLeft}/${totalPrizes}`, 'Prizes Left');
-      }
+    console.log('[PrizeDropTool] updateActiveCampaignHeader - data check:', {
+      connector: !!connector,
+      campaign: _campaign?.campaignId,
+      config: !!_config,
+      campaignState: !!campaignState,
+      playerState: !!_playerState,
+      prizesLeft,
+      totalPrizes
+    });
+
+    // Use custom widget instead of addPromoHeader
+    if (typeof window !== 'undefined' && (window as any).addPromoWidget) {
+      console.log('[PrizeDropTool] Calling addPromoWidget for prizeDrop');
+      (window as any).addPromoWidget(
+        connector,
+        'prizeDrop',
+        _campaign,
+        _config,
+        campaignState,
+        _playerState
+      );
+    } else {
+      console.error('[PrizeDropTool] addPromoWidget not available on window');
     }
   }
 }
