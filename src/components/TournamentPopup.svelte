@@ -427,6 +427,7 @@
 .terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
 .promo-terms-close{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
 .promo-terms-close img{display:block;width:40%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-close span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;text-transform:uppercase;color:white;pointer-events:none}
 .promo-terms-close img.hover{display:none}
 .promo-terms-close img.down{display:none}
 .promo-terms-close:hover img.normal{display:none}
