@@ -399,9 +399,9 @@
             class="promo-image-button secondary"
             on:click={handleOptOut}
           >
-            <img class="normal" src={promoRedBtnNormal} alt="" aria-hidden="true" />
-            <img class="hover" src={promoRedBtnHover} alt="" aria-hidden="true" />
-            <img class="down" src={promoRedBtnDown} alt="" aria-hidden="true" />
+            <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
             <span class="promo-image-button-label">{secondaryButtonLabel}</span>
           </button>
         {/if}
@@ -409,9 +409,9 @@
           class="promo-image-button"
           on:click={handleStart}
         >
-          <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
-          <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
-          <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
+          <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
+          <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
+          <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
       </div>
@@ -525,7 +525,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
 .promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:37px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:42px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -535,8 +535,8 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-button:active img.normal,
 .promo-image-button:active img.hover{display:none}
 .promo-image-button:active img.down{display:block}
-.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#000000 !important}
-.promo-image-button.secondary .promo-image-button-label{color:#000000 !important}
+.promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#ffffff !important}
+.promo-image-button.secondary .promo-image-button-label{color:#ffffff !important}
 /* Responsive scaling  */
 @media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {

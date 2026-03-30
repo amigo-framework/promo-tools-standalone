@@ -14,8 +14,8 @@
 
   const dispatch = createEventDispatcher();
 
-  $: totalAmountLeft = campaignState?.amountsLeft?.reduce((sum: number, amount: number) => sum + amount, 0) || 0;
-  $: totalAmount = config?.prizes?.reduce((sum: number, prize: any) => sum + prize.amount, 0) || 0;
+  $: totalAmountLeft = (Array.isArray(campaignState?.amountsLeft)) ? campaignState.amountsLeft.reduce((sum: number, amount: number) => sum + amount, 0) : 0;
+  $: totalAmount = (Array.isArray(config?.prizes)) ? config.prizes.reduce((sum: number, prize: any) => sum + prize.amount, 0) : 0;
   $: counterText = `${totalAmountLeft}/${totalAmount}`;
   $: minimalQualifyingBet = findMinimalQualifyingBet(connector?.bets, playerState);
   $: isInactive = connector && minimalQualifyingBet !== undefined && connector.getCurrentBetAmount && connector.getCurrentBetAmount() < (playerState?.exchangedQualifyingBet || minimalQualifyingBet);
@@ -34,13 +34,19 @@
   });
 
   function findMinimalQualifyingBet(bets: any[], playerState: any): number | null {
-    if (!bets || !playerState?.exchangedQualifyingBet) return null;
+    if (!Array.isArray(bets) || !playerState?.exchangedQualifyingBet) return null;
     return Math.min(...bets.map(bet => bet.amount).filter(amount => amount >= playerState.exchangedQualifyingBet));
   }
 
   function handleClick() {
+    console.log('[PrizeDropWidget] handleClick called!');
+    console.log('[PrizeDropWidget] connector:', !!connector);
+    console.log('[PrizeDropWidget] campaign:', campaign?.campaignId);
+    console.log('[PrizeDropWidget] window.openPrizeDropPopup available:', typeof (window as any).openPrizeDropPopup);
+    
     // Open the PrizeDrop popup directly
     if (typeof window !== 'undefined' && (window as any).openPrizeDropPopup) {
+      console.log('[PrizeDropWidget] Calling openPrizeDropPopup...');
       (window as any).openPrizeDropPopup(connector, campaign, 'active')
         .then((result: {action: string}) => {
           console.log('[PrizeDropWidget] Popup result:', result);
@@ -52,6 +58,7 @@
           dispatch('click', {action: 'error'});
         });
     } else {
+      console.warn('[PrizeDropWidget] openPrizeDropPopup not available, using fallback');
       // Fallback to dispatch
       dispatch('click');
     }
@@ -83,11 +90,18 @@
   <div 
     class="promo-widget {isInactive ? 'inactive' : ''}"
     transition:fade={{ duration: 200 }}
-    on:click={handleClick}
+    on:click={(e) => {
+      console.log('[PrizeDropWidget] Click event detected!', e);
+      e.stopPropagation();
+      handleClick();
+    }}
     on:keydown={(e) => e.key === 'Enter' && handleClick()}
+    on:touchstart={() => console.log('[PrizeDropWidget] Touch start detected')}
+    on:touchend={() => console.log('[PrizeDropWidget] Touch end detected')}
     role="button"
     tabindex="0"
     aria-label="Prize Drop Widget"
+    style="pointer-events: auto !important;"
   >
     <img src={promoTopCounterPrize} alt="Prize Drop Counter" class="widget-image" />
     <div class="widget-overlay">
