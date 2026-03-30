@@ -15,17 +15,22 @@
   const dispatch = createEventDispatcher();
 
   $: playerRank = getPlayerPosition(campaignState, playerState);
-  $: totalPositions = campaignState?.leaderboard?.length || 0;
-  $: rankText = playerRank > 0 ? `#${playerRank}` : '-';
+  $: totalPositions = campaignState?.leaderboard?.roundIds?.length || 0;
+  $: rankText = playerRank > 0 ? `${playerRank}/${totalPositions}` : totalPositions > 0 ? `-/${totalPositions}` : '-';
   $: minimalQualifyingBet = findMinimalQualifyingBet(connector?.bets, playerState);
   $: isInactive = connector && minimalQualifyingBet !== undefined && connector.getCurrentBetAmount && connector.getCurrentBetAmount() < (playerState?.exchangedQualifyingBet || minimalQualifyingBet);
   $: widgetIndex = parseInt(style.match(/--widget-index:\s*(\d+)/)?.[1] || '0');
 
   function getPlayerPosition(campaignState: any, playerState: any): number {
-    if (!campaignState?.leaderboard || !playerState?.playerId) return 0;
+    const roundIds = campaignState?.leaderboard?.roundIds;
+    const playerRoundId = playerState?.leaderboardRoundId;
     
-    const position = campaignState.leaderboard.findIndex((entry: any) => entry.playerId === playerState.playerId);
-    return position >= 0 ? position + 1 : 0;
+    if (!Array.isArray(roundIds) || playerRoundId == null) {
+      return 0;
+    }
+    
+    const rankIndex = roundIds.findIndex((roundId: string) => roundId === playerRoundId);
+    return rankIndex >= 0 ? rankIndex + 1 : 0;
   }
 
   function findMinimalQualifyingBet(bets: any[], playerState: any): number | null {
@@ -34,9 +39,19 @@
   }
 
   function handleClick() {
+    console.log('[TournamentWidget] handleClick called!');
+    console.log('[TournamentWidget] connector:', !!connector);
+    console.log('[TournamentWidget] campaign:', campaign?.campaignId);
+    console.log('[TournamentWidget] window.openTournamentPopup available:', typeof (window as any).openTournamentPopup);
+    
     // Open the Tournament popup directly
     if (typeof window !== 'undefined' && (window as any).openTournamentPopup) {
-      (window as any).openTournamentPopup(connector, campaign, 'active')
+      console.log('[TournamentWidget] Calling openTournamentPopup...');
+      (window as any).openTournamentPopup(connector, campaign, 'active', {
+        config,
+        campaignState,
+        playerState
+      })
         .then((result: {action: string}) => {
           console.log('[TournamentWidget] Popup result:', result);
           // Dispatch the original event for any other listeners
@@ -47,6 +62,7 @@
           dispatch('click', {action: 'error'});
         });
     } else {
+      console.warn('[TournamentWidget] openTournamentPopup not available, using fallback');
       // Fallback to dispatch
       dispatch('click');
     }
@@ -78,11 +94,18 @@
   <div 
     class="promo-widget {isInactive ? 'inactive' : ''}"
     transition:fade={{ duration: 200 }}
-    on:click={handleClick}
+    on:click={(e) => {
+      console.log('[TournamentWidget] Click event detected!', e);
+      e.stopPropagation();
+      handleClick();
+    }}
     on:keydown={(e) => e.key === 'Enter' && handleClick()}
+    on:touchstart={() => console.log('[TournamentWidget] Touch start detected')}
+    on:touchend={() => console.log('[TournamentWidget] Touch end detected')}
     role="button"
     tabindex="0"
     aria-label="Tournament Widget"
+    style="pointer-events: auto !important;"
   >
     <img src={promoTopCounterTournament} alt="Tournament Counter" class="widget-image" />
     <div class="widget-overlay">

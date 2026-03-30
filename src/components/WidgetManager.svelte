@@ -96,11 +96,7 @@
 
   function handleTournamentClick(campaign: Campaign, config: any, campaignState: any, playerState: any) {
     console.log('[WidgetManager] Tournament widget clicked');
-    // Dispatch event or call popup directly
-    const event = new CustomEvent('showTournamentRules', {
-      detail: { campaign, config, campaignState, playerState }
-    });
-    window.dispatchEvent(event);
+    // Widget handles popup directly, just log
   }
 
   onDestroy(() => {
