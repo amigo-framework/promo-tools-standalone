@@ -28,6 +28,7 @@ export interface IConnector {
   callbacks?: IConnectorCallbacks;
   emitter: IEventEmitter;
   getCurrentBetAmount?(): number;
+  getReplayUrl?(roundId: string, game: string): string;
 }
 
 export interface IConnectorUI {

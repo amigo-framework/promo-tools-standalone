@@ -529,7 +529,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-terms-box{display:block;width:700px !important;height:auto;max-width:none !important;flex:1;min-height:0;margin:0 auto}
 .promo-terms-overlay{position:absolute;inset:0;padding:21px;color:#000;display:flex;flex-direction:column;width:700px;margin:0 auto}
 .promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0;margin-top:20px}
-.promo-terms-tab{position:relative;border:none;background:transparent;padding:0;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto}
+.promo-terms-tab{position:relative;border:none;background:transparent;padding:8px;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto;border-radius:8px}
 .promo-terms-tab img{display:block;width:50%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
 .promo-terms-tab img.hover{display:none}
 .promo-terms-tab img.down{display:none}
@@ -671,7 +671,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
   .promo-title { top: 195px; }
   .promo-image-message { top: 239px; }
   .promo-win-value { top: 257px; }
-  .promo-actions { bottom: 20px; }
+  .promo-actions { bottom: 23px; }
 }
 
 @media (max-width: 479px) {

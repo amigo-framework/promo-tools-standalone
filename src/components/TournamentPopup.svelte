@@ -22,7 +22,7 @@
 
   export let connector: IConnector;
   export let campaign: Campaign;
-  export let mode: 'started' | 'active' | 'finished' = 'started';
+  export let mode: 'started' | 'active' | 'finished' | 'terms' = 'started';
   export let prizeWonData: any = null;
 
   const dispatch = createEventDispatcher();
@@ -32,7 +32,7 @@
   let campaignState: any = null;
   let playerState: any = null;
   let showTermsAndConditions = false;
-  let termsActiveTab = 'terms'; // 'terms' or 'conditions'
+  let termsActiveTab = 'prizes'; // 'prizes', 'leaderboard', 'rules'
 
   onMount(async () => {
     try {
@@ -53,6 +53,12 @@
       config = data.config;
       campaignState = data.campaignState;
       playerState = data.playerState;
+      
+      // If mode is 'terms', directly open T&C with leaderboard tab
+      if (mode === 'terms') {
+        showTermsAndConditions = true;
+        termsActiveTab = 'leaderboard';
+      }
       
     } catch (error) {
       console.error('[TournamentPopup] Error loading campaign data:', error);
@@ -114,11 +120,15 @@
   }
 
   function switchToTermsTab() {
-    termsActiveTab = 'terms';
+    termsActiveTab = 'prizes';
   }
 
   function switchToConditionsTab() {
-    termsActiveTab = 'conditions';
+    termsActiveTab = 'rules';
+  }
+  
+  function switchToLeaderboardTab() {
+    termsActiveTab = 'leaderboard';
   }
 
   export function closePopup() {
@@ -130,7 +140,7 @@
   }
 </script>
 
-{#if !loading && visible && !showTermsAndConditions}
+{#if !loading && visible && !showTermsAndConditions && mode !== 'terms'}
   <div
     class="promo-modal-overlay"
     transition:fade={{ duration: 200 }}
@@ -252,65 +262,138 @@
           <div class="promo-terms-overlay">
             <div class="promo-terms-tabs">
               <button 
-                class="promo-terms-tab {termsActiveTab === 'terms' ? 'active' : ''}"
+                class="promo-terms-tab {termsActiveTab === 'prizes' ? 'active' : ''}"
                 on:click={switchToTermsTab}
               >
                 <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
                 <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
                 <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
-                <span class="tab-label">Terms</span>
+                <span class="tab-label">{tr('tournamentRulesPrizesTab') || 'Prizes'}</span>
               </button>
               <button 
-                class="promo-terms-tab {termsActiveTab === 'conditions' ? 'active' : ''}"
+                class="promo-terms-tab {termsActiveTab === 'rules' ? 'active' : ''}"
                 on:click={switchToConditionsTab}
               >
                 <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
                 <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
                 <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
-                <span class="tab-label">Conditions</span>
+                <span class="tab-label">{tr('tournamentRulesRulesTab') || 'Rules'}</span>
+              </button>
+              <button 
+                class="promo-terms-tab {termsActiveTab === 'leaderboard' ? 'active' : ''}"
+                on:click={switchToLeaderboardTab}
+              >
+                <img class="normal" src={tabBtnLargeNormal} alt="" aria-hidden="true" />
+                <img class="hover" src={tabBtnLargeHover} alt="" aria-hidden="true" />
+                <img class="down" src={tabBtnLargeDown} alt="" aria-hidden="true" />
+                <span class="tab-label">{tr('tournamentRulesLeaderboardTab') || 'Leaderboard'}</span>
               </button>
             </div>
             
             <div class="promo-terms-text">
-              {#if termsActiveTab === 'terms'}
+              {#if termsActiveTab === 'prizes'}
                 <div class="promo-terms-content-text">
-                  <h3>Tournament Rules</h3>
-                  <div class="terms-content">
-                    <p>Tournament prizes are awarded based on final position.</p>
-                    {#if config?.prizes}
-                      <ul>
-                        {#each config.prizes as prize, index}
-                          <li>Position {index + 1}: {prize.value} {prize.type === 'cash' ? '(cash)' : ''}</li>
-                        {/each}
-                      </ul>
-                    {/if}
-                    {#if campaign.end}
-                      <p><strong>Tournament ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
-                    {/if}
-                    <p>Standard terms and conditions apply.</p>
-                  </div>
-                </div>
-              {:else}
-                <div class="promo-terms-content-text">
-                  <h3>Terms and Conditions</h3>
-                  <p><strong>Tournament Conditions:</strong></p>
-                  <ul>
-                    <li>This tournament is available to eligible players only</li>
-                    <li>Rankings are updated in real-time during the tournament</li>
-                    <li>Final rankings determine prize distribution</li>
-                    <li>Standard terms and conditions apply</li>
-                  </ul>
-                  
-                  <p><strong>Prize Conditions:</strong></p>
-                  <ul>
-                    <li>Prizes are awarded based on final tournament position</li>
-                    <li>Cash prizes are credited directly after tournament ends</li>
-                    <li>Tournament results are final and binding</li>
-                  </ul>
-                  
+                  <h3>{tr('tournamentRulesPrizesIntroMessage') || 'Tournament Prizes'}</h3>
+                  {#if config?.prizes}
+                    <ul>
+                      {#each config.prizes as prize, index}
+                        <li>
+                          {#if prize.amount === 1}
+                            Position {index + 1}: 
+                          {:else}
+                            Positions {index + 1}-{index + prize.amount}: 
+                          {/if}
+                          <strong>
+                            {#if prize.type === 'cash'}
+                              {connector.formatCurrency(prize.value)}
+                            {:else}
+                              {prize.value}
+                            {/if}
+                          </strong>
+                        </li>
+                      {/each}
+                    </ul>
+                  {/if}
                   {#if campaign.end}
                     <p><strong>Tournament ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
                   {/if}
+                </div>
+              {:else if termsActiveTab === 'leaderboard'}
+                <div class="promo-terms-content-text">
+                  <h3>{tr('tournamentRulesLeaderboardTab') || 'Leaderboard'}</h3>
+                  {#if campaignState?.leaderboard?.winRatios}
+                    <!-- Calculate data like in connector -->
+                    {@const prizeValuesAtPositions = config?.prizes?.flatMap((prize, index) => 
+                      Array(prize.amount || 1).fill(
+                        prize.type === 'cash' 
+                          ? (playerState?.exchangedCashValues?.[index] ? connector.formatCurrency(playerState.exchangedCashValues[index]) : connector.formatCurrency(prize.value))
+                          : prize.value
+                      )
+                    ) || []}
+                    {@const playerIndexToHighlight = playerState?.leaderboardRoundId != null ? 
+                      campaignState.leaderboard.roundIds.findIndex(roundId => roundId === playerState.leaderboardRoundId) : -1}
+                    {@const replayUrls = campaignState.leaderboard.roundIds.map((roundId, index) => 
+                      campaignState.leaderboard.games?.[index] && connector.getReplayUrl ? 
+                        connector.getReplayUrl(roundId, campaignState.leaderboard.games[index]) : null
+                    )}
+                    
+                    <div class="leaderboard-table">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>{tr('tournamentLeaderboardPosition') || '#'}</th>
+                            <th>{tr('tournamentLeaderboardWinRatio') || 'Win Ratio'}</th>
+                            <th>{tr('tournamentLeaderboardPrize') || 'Prize'}</th>
+                            <th>{tr('tournamentLeaderboardReplay') || 'Replay'}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {#each campaignState.leaderboard.winRatios as winRatio, index}
+                            <tr class:highlighted={index === playerIndexToHighlight}>
+                              <td>
+                                {#if index === playerIndexToHighlight}▶{/if} {index + 1}.
+                              </td>
+                              <td>{winRatio != null ? Number(winRatio.toFixed(2)) + 'x' : '-'}</td>
+                              <td>{prizeValuesAtPositions[index] || '-'}</td>
+                              <td>
+                                {#if replayUrls[index]}
+                                  <a href={replayUrls[index]} target="_blank" rel="noopener noreferrer" style="color: #ffffff; text-decoration: none; cursor: pointer;">▶</a>
+                                {:else}
+                                  -
+                                {/if}
+                              </td>
+                            </tr>
+                          {/each}
+                        </tbody>
+                      </table>
+                    </div>
+                  {:else}
+                    <p>No leaderboard data available</p>
+                  {/if}
+                </div>
+              {:else}
+                <div class="promo-terms-content-text">
+                  <h3>{tr('tournamentRulesRulesTab') || 'Tournament Rules'}</h3>
+                  <div class="terms-content">
+                    <p><strong>Tournament Conditions:</strong></p>
+                    <ul>
+                      <li>This tournament is available to eligible players only</li>
+                      <li>Rankings are updated in real-time during the tournament</li>
+                      <li>Final rankings determine prize distribution</li>
+                      <li>Standard terms and conditions apply</li>
+                    </ul>
+                    
+                    <p><strong>Prize Conditions:</strong></p>
+                    <ul>
+                      <li>Prizes are awarded based on final tournament position</li>
+                      <li>Cash prizes are credited directly after tournament ends</li>
+                      <li>Tournament results are final and binding</li>
+                    </ul>
+                    
+                    {#if campaign.end}
+                      <p><strong>Tournament ends:</strong> {new Date(campaign.end).toLocaleString()}</p>
+                    {/if}
+                  </div>
                 </div>
               {/if}
             </div>
@@ -431,9 +514,11 @@
 .promo-terms-box{display:block;width:700px !important;height:auto;max-width:none !important;flex:1;min-height:0;margin:0 auto}
 .promo-terms-overlay{position:absolute;inset:0;padding:21px;color:#000;display:flex;flex-direction:column;width:700px;margin:0 auto}
 .promo-terms-tabs{display:flex;gap:10px;margin-bottom:15px;justify-content:center;flex-shrink:0;margin-top:20px}
-.promo-terms-tab{position:relative;border:none;background:transparent;padding:0;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto}
-.promo-terms-tab img{display:block;width:50%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
+.promo-terms-tab{position:relative;border:none;background:transparent;padding:8px;cursor:pointer;transition:all 0.2s;margin:0 auto;pointer-events:auto;border-radius:8px}
+.promo-terms-tab img{display:block;width:80%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
 .promo-terms-tab img.hover{display:none}
+.promo-terms-tab:hover{background:rgba(255,255,255,0.1)}
+.promo-terms-tab:active{background:rgba(255,255,255,0.2);transform:scale(0.98)}
 .promo-terms-tab img.down{display:none}
 .promo-terms-tab.active img.normal{display:none !important}
 .promo-terms-tab.active img.hover{display:none !important}
@@ -441,7 +526,7 @@
 .promo-terms-tab:not(.active):hover img.normal{display:none !important}
 .promo-terms-tab:not(.active):hover img.hover{display:block !important}
 .promo-terms-tab:not(.active):hover img.down{display:none !important}
-.tab-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:12px;font-weight:600;color:#ffffff;pointer-events:none;text-align:center;z-index:1}
+.tab-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:600;color:#ffffff;pointer-events:none;text-align:center;z-index:1}
 .promo-terms-text{flex:1;overflow-y:auto;padding:10px 15px;background:transparent;border-radius:8px;margin:5px 10px;min-height:0}
 .promo-terms-content-text{font-size:11px;line-height:1.4;color:#ffffff;font-family:Arial,sans-serif}
 .promo-terms-content-text h3{margin:0 0 8px 0;font-size:12px;color:#ffffff;font-weight:bold}
@@ -450,6 +535,14 @@
 .promo-terms-content-text li{margin-bottom:3px}
 .promo-terms-content-text strong{color:#ffffff;font-weight:600}
 .terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
+
+/* Leaderboard table styles */
+.leaderboard-table{margin-top:10px;width:100%;max-height:200px;overflow-y:auto}
+.leaderboard-table table{width:100%;border-collapse:collapse;font-size:10px}
+.leaderboard-table th{background:rgba(255,255,255,0.1);padding:4px 6px;text-align:center;font-weight:bold;color:#ffffff;border-bottom:1px solid rgba(255,255,255,0.2)}
+.leaderboard-table td{padding:3px 6px;text-align:center;color:#ffffff;border-bottom:1px solid rgba(255,255,255,0.1)}
+.leaderboard-table tr.highlighted{background:rgba(255,255,0,0.2)}
+.leaderboard-table tr.highlighted td{font-weight:bold}
 .promo-terms-close{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
 .promo-terms-close img{display:block;width:40%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
 .promo-terms-close span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;text-transform:uppercase;color:white;pointer-events:none}

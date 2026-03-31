@@ -46,10 +46,10 @@
     console.log('[TournamentWidget] campaign:', campaign?.campaignId);
     console.log('[TournamentWidget] window.openTournamentPopup available:', typeof (window as any).openTournamentPopup);
     
-    // Open the Tournament popup directly
+    // Open the Tournament Terms & Conditions directly
     if (typeof window !== 'undefined' && (window as any).openTournamentPopup) {
-      console.log('[TournamentWidget] Calling openTournamentPopup...');
-      (window as any).openTournamentPopup(connector, campaign, 'active', {
+      console.log('[TournamentWidget] Calling openTournamentPopup for terms...');
+      (window as any).openTournamentPopup(connector, campaign, 'terms', {
         config,
         campaignState,
         playerState

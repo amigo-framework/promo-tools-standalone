@@ -100,7 +100,7 @@ export class SvelteOverlayManager {
   async showTournamentPopup(
     connector: IConnector,
     campaign: Campaign,
-    mode: 'started' | 'active' | 'finished',
+    mode: 'started' | 'active' | 'finished' | 'terms',
     initialData?: {config: any; campaignState: any; playerState: any}
   ): Promise<{action: string}> {
     return new Promise((resolve) => {
