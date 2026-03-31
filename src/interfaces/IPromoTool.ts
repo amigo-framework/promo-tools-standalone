@@ -96,6 +96,13 @@ export interface IPromoTool {
   onBetChanged(connector: IConnector, campaign: Campaign, data: any): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}>;
   getActiveCampaignId(): string | null;
   getActiveCampaignInfo(): any;
+  /**
+   * Called when a campaign unexpectedly disappears from the campaign list
+   * (e.g., cancelled by admin, expired on server) without going through
+   * the normal finish flow. Should clean up internal state and release
+   * any resources (like frozen bets).
+   */
+  onCampaignRemoved(connector: IConnector): void;
   destroy?(): void; // Optional cleanup method
 }
 

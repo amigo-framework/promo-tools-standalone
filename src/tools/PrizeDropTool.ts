@@ -95,6 +95,12 @@ export class PrizeDropTool implements IPromoTool {
     return this.activeCampaignInfo;
   }
 
+  onCampaignRemoved(_connector: IConnector): void {
+    // Clean up internal state
+    this.activeCampaignId = null;
+    this.activeCampaignInfo = null;
+  }
+
   destroy(): void {
     this.overlayManager.destroy();
   }

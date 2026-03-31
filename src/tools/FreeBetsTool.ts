@@ -86,6 +86,14 @@ export class FreeBetsTool implements IPromoTool {
     return this.activeCampaignInfo;
   }
 
+  onCampaignRemoved(connector: IConnector): void {
+    // Unfreeze bet if it was frozen
+    connector.callbacks?.unfreezeBet && connector.callbacks.unfreezeBet();
+    // Clean up internal state
+    this.activeCampaignId = null;
+    this.activeCampaignInfo = null;
+  }
+
   destroy(): void {
     this.overlayManager.destroy();
   }
