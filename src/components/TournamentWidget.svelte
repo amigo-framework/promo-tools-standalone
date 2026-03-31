@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { IConnector, Campaign } from '../interfaces/IPromoTool';
+  import { findMinimalQualifyingBet } from '../shared/findMinimalQualifyingBet';
   import promoTopCounterTournament from '../assets/promo/promo_top_counter_tournament.png';
 
   export let connector: IConnector;
@@ -15,14 +16,15 @@
   const dispatch = createEventDispatcher();
 
   $: playerRank = getPlayerPosition(campaignState, playerState);
-  $: totalPositions = campaignState?.leaderboard?.roundIds?.length || 0;
+  $: totalPositions = getTotalPositions(campaignState);
   $: rankText = playerRank > 0 ? `${playerRank}/${totalPositions}` : totalPositions > 0 ? `-/${totalPositions}` : '-';
   $: minimalQualifyingBet = findMinimalQualifyingBet(connector?.bets, playerState);
-  $: isInactive = connector && minimalQualifyingBet !== undefined && connector.getCurrentBetAmount && connector.getCurrentBetAmount() < (playerState?.exchangedQualifyingBet || minimalQualifyingBet);
+  $: currentBet = connector?.getCurrentBetAmount?.();
+  $: isInactive = currentBet !== undefined && minimalQualifyingBet !== undefined && currentBet < (playerState?.exchangedQualifyingBet || 0);
   $: widgetIndex = parseInt(style.match(/--widget-index:\s*(\d+)/)?.[1] || '0');
 
   function getPlayerPosition(campaignState: any, playerState: any): number {
-    const roundIds = campaignState?.leaderboard?.roundIds;
+    const roundIds = campaignState?.leaderboard?.roundIds || [];
     const playerRoundId = playerState?.leaderboardRoundId;
     
     if (!Array.isArray(roundIds) || playerRoundId == null) {
@@ -33,9 +35,9 @@
     return rankIndex >= 0 ? rankIndex + 1 : 0;
   }
 
-  function findMinimalQualifyingBet(bets: any[], playerState: any): number | null {
-    if (!bets || !playerState?.exchangedQualifyingBet) return null;
-    return Math.min(...bets.map(bet => bet.amount).filter(amount => amount >= playerState.exchangedQualifyingBet));
+  function getTotalPositions(campaignState: any): number {
+    const roundIds = campaignState?.leaderboard?.roundIds || [];
+    return Array.isArray(roundIds) ? roundIds.length : 0;
   }
 
   function handleClick() {

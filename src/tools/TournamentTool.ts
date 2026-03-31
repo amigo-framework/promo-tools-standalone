@@ -142,12 +142,16 @@ export class TournamentTool implements IPromoTool {
     }
   }
 
-  private updateActiveCampaignHeader(connector: IConnector, _campaign: Campaign, _config: any, campaignState: any, playerState: any) {
+  private updateActiveCampaignHeader(connector: IConnector, campaign: Campaign, config: any, campaignState: any, playerState: any) {
     const roundIds = campaignState?.leaderboard?.roundIds || [];
     const playerRoundId = playerState?.leaderboardRoundId;
-    const rankIndex = playerRoundId != null ? roundIds.findIndex((roundId: string) => roundId === playerRoundId) : -1;
-    const playerRank = rankIndex >= 0 ? rankIndex + 1 : '-';
+    
+    // Calculate player rank exactly like in connector
+    const playerRank = playerRoundId != null && roundIds.some((roundId: string) => roundId === playerRoundId)
+        ? roundIds.findIndex((roundId: string) => roundId === playerRoundId) + 1
+        : "-";
     const totalPositions = roundIds.length;
+    
     this.activeCampaignInfo = { playerRank, totalPositions };
 
     // Use custom widget instead of addPromoHeader
@@ -155,10 +159,10 @@ export class TournamentTool implements IPromoTool {
       (window as any).addPromoWidget(
         connector,
         'tournament',
-        _campaign,
-        _config,
-        { leaderboard: roundIds.map((_: any, index: number) => ({ playerId: `player_${index}` })) },
-        { playerId: 'currentPlayer' }
+        campaign,
+        config,
+        campaignState,
+        playerState
       );
     }
   }

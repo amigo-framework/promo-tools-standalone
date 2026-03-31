@@ -27,6 +27,7 @@ export interface IConnector {
   bets: IBets | undefined;
   callbacks?: IConnectorCallbacks;
   emitter: IEventEmitter;
+  getCurrentBetAmount?(): number;
 }
 
 export interface IConnectorUI {

@@ -194,29 +194,42 @@
         {/if}
       </div>
 
-      <div class="promo-actions">
-        {#if showOptOutButton}
+      <!-- Bottoni colorati per popup iniziale (started) -->
+      {#if mode === 'started'}
+        <div class="promo-actions">
+          {#if showOptOutButton}
+            <button
+              class="promo-image-button secondary"
+              on:click={handleOptOut}
+            >
+              <img class="normal" src={promoRedBtnNormal} alt="" aria-hidden="true" />
+              <img class="hover" src={promoRedBtnHover} alt="" aria-hidden="true" />
+              <img class="down" src={promoRedBtnDown} alt="" aria-hidden="true" />
+              <span class="promo-image-button-label">{secondaryButtonLabel}</span>
+            </button>
+          {/if}
           <button
-            class="promo-image-button secondary"
-            on:click={handleOptOut}
+            class="promo-image-button"
+            on:click={handlePrimaryButton}
           >
-            <img class="normal" src={promoRedBtnNormal} alt="" aria-hidden="true" />
-            <img class="hover" src={promoRedBtnHover} alt="" aria-hidden="true" />
-            <img class="down" src={promoRedBtnDown} alt="" aria-hidden="true" />
-            <span class="promo-image-button-label">{secondaryButtonLabel}</span>
+            <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
+            <span class="promo-image-button-label">{primaryButtonLabel}</span>
           </button>
-        {/if}
+        </div>
+      {:else}
+        <!-- Bottone neutro per tutte le altre popup -->
         <button
-          class="promo-image-button"
+          class="promo-neutral-button"
           on:click={handlePrimaryButton}
-          style="transform: translateY(5px);"
         >
           <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
           <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
           <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
-          <span class="promo-image-button-label" style="color: white;">{primaryButtonLabel}</span>
+          <span class="promo-neutral-button-label">{primaryButtonLabel}</span>
         </button>
-      </div>
+      {/if}
     </section>
   </div>
 {/if}
@@ -333,7 +346,7 @@
 .promo-qualifying-bet{position:absolute;left:50%;top:356px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 .promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:47px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:42px;display:flex;justify-content:center;align-items:center;gap:8px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -345,6 +358,18 @@
 .promo-image-button:active img.down{display:block}
 .promo-image-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#ffffff !important;pointer-events:none}
 .promo-image-button.secondary .promo-image-button-label{color:#ffffff !important}
+
+/* Bottone neutro per popup non-started */
+.promo-neutral-button{position:absolute;left:50%;bottom:47px;transform:translateX(-50%);border:0;background:transparent;padding:0;cursor:pointer;pointer-events:auto;width:60px;height:auto}
+.promo-neutral-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
+.promo-neutral-button img.hover{display:none}
+.promo-neutral-button img.down{display:none}
+.promo-neutral-button:hover img.normal{display:none}
+.promo-neutral-button:hover img.hover{display:block}
+.promo-neutral-button:active img.normal,
+.promo-neutral-button:active img.hover{display:none}
+.promo-neutral-button:active img.down{display:block}
+.promo-neutral-button-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Roboto',Arial,sans-serif;font-size:9px;font-weight:900;letter-spacing:.2px;text-transform:uppercase;color:#ffffff !important;pointer-events:none}
 /* Responsive scaling */
 @media (min-width: 700px) and (max-width: 1199px) {
   .promo-image-popup {
