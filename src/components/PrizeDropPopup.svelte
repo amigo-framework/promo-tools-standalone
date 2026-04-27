@@ -345,7 +345,7 @@
         <img class="promo-image-bottom" src={promoBoxSmall} alt="" aria-hidden="true" />
       </div>
       <div class="promo-image-overlay-content">
-        <div id="popup-title" class="promo-title">{title}</div>
+        <div id="popup-title" class="promo-title" class:prize-won={mode === 'prizeWon'}>{title}</div>
         <div class="promo-image-message">{message}</div>
 
         {#if mode === 'prizeWon'}
@@ -399,9 +399,9 @@
             class="promo-image-button secondary"
             on:click={handleOptOut}
           >
-            <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
-            <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
-            <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
+            <img class="normal" src={promoRedBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={promoRedBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={promoRedBtnDown} alt="" aria-hidden="true" />
             <span class="promo-image-button-label">{secondaryButtonLabel}</span>
           </button>
         {/if}
@@ -409,9 +409,9 @@
           class="promo-image-button"
           on:click={handleStart}
         >
-          <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
-          <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
-          <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
+          <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
+          <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
+          <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
       </div>
@@ -512,7 +512,8 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-top{display:block;width:400px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/681;margin:0 auto;position:relative;z-index:2;transform:translateY(-50px)}
 .promo-image-bottom{display:block;width:600px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352;margin:0 auto;transform:translateY(-100px)}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
-.promo-title{position:absolute;left:50%;top:175px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-title{position:absolute;left:50%;top:36%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:37px;font-weight:1000;line-height:1.05;background:linear-gradient(180deg,#ffff00,#ffa500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:2px #000000}
+.promo-title.prize-won{font-size:25px;top:37%}
 .promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-win-value{position:absolute;left:50%;top:237px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
@@ -525,7 +526,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
 .promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
-.promo-actions{position:absolute;left:50%;right:auto;bottom:42px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-actions{position:absolute;left:50%;right:auto;bottom:37px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
@@ -675,7 +676,6 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
   .promo-terms-close { bottom: -5px; }
   .promo-image-top { transform: translateY(-30px); }
   .promo-image-bottom { transform: translateY(-80px); }
-  .promo-title { top: 195px; }
   .promo-image-message { top: 239px; }
   .promo-win-value { top: 257px; }
   .promo-prizes-list { top: 249px; }
