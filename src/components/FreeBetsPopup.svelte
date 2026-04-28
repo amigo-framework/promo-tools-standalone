@@ -298,8 +298,9 @@
         >
           {title}
         </div>
-        <div class="promo-image-message">{message}</div>
+        <div class="promo-image-message" class:finished={mode === 'finished'}>{message}</div>
 
+        {#if mode !== 'finished'}
         <div class="promo-info-grid">
           <div class="promo-info-card">
             <div class="promo-info-label">{freeBetsLabel}</div>
@@ -310,6 +311,7 @@
             <div class="promo-info-value">{connector.formatCurrency(freeBetsAmount)}</div>
           </div>
         </div>
+        {/if}
 
         {#if campaign.end}
           <div class="promo-end-date">
@@ -449,8 +451,9 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-bottom{display:block;width:600px;height:auto;object-fit:contain;flex-shrink:0;aspect-ratio:925/352;margin:0 auto;transform:translateY(-100px)}
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-fs-hero{position:absolute;left:55%;top:75px;transform:translateX(-50%);font-size:88px;line-height:1;font-weight:900;color:#fff;-webkit-text-stroke:2px #d4af37;text-shadow:0 2px 6px rgba(0,0,0,.55),0 0 6px rgba(212,175,55,.35)}
-.promo-title{position:absolute;left:50%;top:175px;width:360px;margin:0;transform:translateX(-50%);text-align:center;font-family:'Roboto-Bold',sans-serif;font-size:20px;font-weight:bolder;line-height:1.05;color:#ffff00;-webkit-text-stroke:0.5px #000000}
+.promo-title{position:absolute;left:50%;top:36%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:37px;font-weight:1000;line-height:1.05;background:linear-gradient(180deg,#ffff00,#ffa500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:2px #000000}
 .promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:10px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-image-message.finished{top:282px}
 .promo-end-date{position:absolute;left:50%;top:370px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-actions{position:absolute;left:50%;right:auto;bottom:45px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
@@ -668,7 +671,6 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
     transform: translateY(-80px);
     margin: 0 auto;
   }
-  .promo-title { top: 195px; }
   .promo-image-message { top: 239px; }
   .promo-win-value { top: 257px; }
   .promo-actions { bottom: 23px; }
