@@ -345,15 +345,15 @@
         <img class="promo-image-bottom" src={promoBoxSmall} alt="" aria-hidden="true" />
       </div>
       <div class="promo-image-overlay-content">
-        <div id="popup-title" class="promo-title" class:prize-won={mode === 'prizeWon'}>{title}</div>
-        <div class="promo-image-message">{message}</div>
+        <div id="popup-title" class="promo-title" class:prize-won={mode === 'prizeWon'} class:finished={mode === 'finished'}>{title}</div>
+        <div class="promo-image-message" class:finished={mode === 'finished'}>{message}</div>
 
         {#if mode === 'prizeWon'}
           <div class="promo-win-value">{getPrizeWonValue()}</div>
         {/if}
 
         {#if mode === 'finished'}
-          <div class="promo-win-value">{finishedTotalWonValue}</div>
+          <div class="promo-win-value finished">{finishedTotalWonValue}</div>
         {/if}
 
         {#if mode === 'started' || mode === 'active'}
@@ -514,8 +514,11 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-image-overlay-content{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35));padding:20px;color:#fff;pointer-events:none}
 .promo-title{position:absolute;left:50%;top:36%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:37px;font-weight:1000;line-height:1.05;background:linear-gradient(180deg,#ffff00,#ffa500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:2px #000000}
 .promo-title.prize-won{font-size:25px;top:37%}
-.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:12px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-title.finished{font-size:23px;top:178px}
+.promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:11px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-image-message.finished{top:260px}
 .promo-win-value{position:absolute;left:50%;top:237px;width:360px;transform:translateX(-50%);text-align:center;font-size:16px;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
+.promo-win-value.finished{top:280px}
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
 .promo-qualifying-bet{position:absolute;left:50%;top:356px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 .promo-prizes-list{position:absolute;left:50%;top:229px;width:300px;max-width:300px;transform:translateX(-50%);border-radius:4px;padding:6px 8px;display:grid;grid-template-columns:1fr 1fr;gap:2px 0px;max-height:95px;overflow-y:auto}
