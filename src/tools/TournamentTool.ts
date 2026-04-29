@@ -131,6 +131,12 @@ export class TournamentTool implements IPromoTool {
       if (result.action === 'buttonClick' || result.action === 'close') {
         await _connector.acknowledgeCampaign(campaign.campaignId);
         _connector.ui().removePromoHeader('tournament');
+        
+        // Remove widget when finished popup is closed
+        if (typeof window !== 'undefined' && (window as any).removePromoWidget) {
+          (window as any).removePromoWidget('tournament');
+        }
+        
         this.activeCampaignId = null;
         acknowledged = true;
 
@@ -143,6 +149,12 @@ export class TournamentTool implements IPromoTool {
       if (!acknowledged) {
         await _connector.acknowledgeCampaign(campaign.campaignId);
         _connector.ui().removePromoHeader('tournament');
+        
+        // Remove widget in finally block as well
+        if (typeof window !== 'undefined' && (window as any).removePromoWidget) {
+          (window as any).removePromoWidget('tournament');
+        }
+        
         this.activeCampaignId = null;
       }
     }
