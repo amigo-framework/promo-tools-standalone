@@ -619,7 +619,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-terms-content-text li{margin-bottom:3px}
 .promo-terms-content-text strong{color:#ffffff;font-weight:600}
 .terms-content{background:transparent;padding:8px;border-radius:4px;white-space:pre-line}
-.promo-terms-close{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
+.promo-terms-close{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:transparent;border:none;cursor:pointer;transition:all 0.2s;flex-shrink:0;padding:0}
 .promo-terms-close img{display:block;width:40%;height:auto;user-select:none;pointer-events:none;margin:0 auto}
 .promo-terms-close img.hover{display:none}
 .promo-terms-close img.down{display:none}
