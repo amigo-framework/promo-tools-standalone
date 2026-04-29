@@ -454,7 +454,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-title{position:absolute;left:50%;top:36%;width:calc(100% - 40px);margin:0;transform:translateX(-50%);text-align:center;font-size:37px;font-weight:1000;line-height:1.05;background:linear-gradient(180deg,#ffff00,#ffa500);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:2px #000000}
 .promo-image-message{position:absolute;left:50%;top:219px;width:360px;transform:translateX(-50%);text-align:center;font-weight:600;font-size:10px;color:#ffff00;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-image-message.finished{top:282px}
-.promo-end-date{position:absolute;left:50%;top:370px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.promo-end-date{position:absolute;left:50%;top:360px;width:360px;transform:translateX(-50%);text-align:center;font-size:8px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-actions{position:absolute;left:50%;right:auto;bottom:45px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%)}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
@@ -472,7 +472,7 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .promo-info-label{font-size:9px;color:#fff;opacity:.95;margin-bottom:3px}
 .promo-info-value{font-size:20px;font-weight:700;color:#fff}
 
-.promo-terms-link{position:absolute;left:50%;top:379px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
+.promo-terms-link{position:absolute;left:50%;top:375px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
 
 /* Responsive scaling */
 @media (min-width: 700px) and (max-width: 1199px) {
