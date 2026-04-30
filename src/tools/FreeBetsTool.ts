@@ -45,16 +45,32 @@ export class FreeBetsTool implements IPromoTool {
     });
   }
 
-  async onWager(connector: IConnector, campaign: Campaign): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+  async onWager(connector: IConnector, campaign: Campaign, data: any): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+    console.log('[FreeBetsTool] onWager called - Campaign:', campaign.campaignId);
+    console.log('[FreeBetsTool] Wager data:', data);
+    console.log('[FreeBetsTool] Win amount:', data?.wager?.win);
+    console.log('[FreeBetsTool] Balance:', data?.balance);
+    console.log('[FreeBetsTool] Round ID:', data?.roundId);
+    
     if (campaign.status === "active") {
+      // Get updated campaign data with the new totalWin
       const {config, playerState} = await connector.getCampaign(campaign.campaignId);
+      console.log('[FreeBetsTool] Updated playerState:', playerState);
+      console.log('[FreeBetsTool] Total win so far:', playerState?.totalWin);
+      
       connector.callbacks?.freezeBet && connector.callbacks.freezeBet(playerState.amount);
       this.updateActiveCampaignHeader(connector, campaign, config, playerState);
     }
     return {shouldIgnore: false, shouldRefresh: false};
   }
 
-  async onStopped(connector: IConnector, campaign: Campaign): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+  async onStopped(connector: IConnector, campaign: Campaign, data: any): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+    console.log('[FreeBetsTool] onStopped called - Campaign:', campaign.campaignId);
+    console.log('[FreeBetsTool] Stopped data:', data);
+    console.log('[FreeBetsTool] Final win:', data?.finalWin);
+    console.log('[FreeBetsTool] Balance:', data?.balance);
+    console.log('[FreeBetsTool] Round ID:', data?.roundId);
+    
     const {config, playerState} = await connector.getCampaign(campaign.campaignId);
 
     if (campaign.status === "started") {
@@ -74,7 +90,10 @@ export class FreeBetsTool implements IPromoTool {
     return {shouldIgnore: false, shouldRefresh: false};
   }
 
-  async onBetChanged(): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+  async onBetChanged(_connector: IConnector, campaign: Campaign, data: any): Promise<{shouldIgnore: boolean; shouldRefresh: boolean}> {
+    console.log('[FreeBetsTool] onBetChanged called - Campaign:', campaign.campaignId);
+    console.log('[FreeBetsTool] Bet changed data:', data);
+    console.log('[FreeBetsTool] New bet amount:', data?.bet);
     return {shouldIgnore: false, shouldRefresh: false};
   }
 
@@ -151,15 +170,17 @@ export class FreeBetsTool implements IPromoTool {
     const total = _config?.bets || 0;
     this.activeCampaignInfo = { used, total };
 
+    console.log('[FreeBetsTool] Updating widget with playerState:', playerState);
+
     // Use custom widget instead of addPromoHeader
     if (typeof window !== 'undefined' && (window as any).addPromoWidget) {
       (window as any).addPromoWidget(
         connector,
         'freeBets',
         _campaign,
-        { amount: total },
+        _config,
         null,
-        { available: total - used }
+        playerState  // Pass the full playerState including totalWin
       );
     }
   }

@@ -15,6 +15,15 @@
 
   $: freeBetsCount = config && typeof config.bets === 'number' ? Math.max(0, config.bets - (playerState?.used || 0)) : (playerState?.available || 0);
   $: widgetIndex = parseInt(style.match(/--widget-index:\s*(\d+)/)?.[1] || '0');
+  $: totalWin = playerState?.totalWin || 0;
+  $: showWinBadge = totalWin > 0;
+
+  function formatCurrency(value: number): string {
+    if (connector?.formatCurrency) {
+      return connector.formatCurrency(value);
+    }
+    return value.toFixed(2);
+  }
 
   function handleClick() {
     console.log('[FreeBetsWidget] handleClick called!');
@@ -86,6 +95,11 @@
       <div class="widget-counter">{freeBetsCount}</div>
       <div class="widget-label">{tr('freeBets')}</div>
     </div>
+    {#if showWinBadge}
+      <div class="win-badge" transition:fade={{ duration: 300 }}>
+        <div class="win-amount">+{formatCurrency(totalWin)}</div>
+      </div>
+    {/if}
   </div>
 {/if}
 
@@ -148,6 +162,40 @@
     line-height: 1;
   }
 
+  .win-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+    border: 2px solid #ffffff;
+    border-radius: 12px;
+    padding: 4px 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 215, 0, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .win-amount {
+    font-family: 'Roboto-Bold', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    color: #000000;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 215, 0, 0.6);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+  }
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .promo-widget {
@@ -165,6 +213,16 @@
     
     .widget-label {
       font-size: 9px;
+    }
+
+    .win-badge {
+      top: -6px;
+      right: -6px;
+      padding: 3px 6px;
+    }
+
+    .win-amount {
+      font-size: 10px;
     }
   }
 
@@ -185,6 +243,17 @@
     
     .widget-label {
       font-size: 8px;
+    }
+
+    .win-badge {
+      top: -5px;
+      right: -5px;
+      padding: 2px 5px;
+      border-radius: 10px;
+    }
+
+    .win-amount {
+      font-size: 9px;
     }
   }
 </style>
