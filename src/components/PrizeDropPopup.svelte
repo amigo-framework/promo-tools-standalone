@@ -76,7 +76,9 @@
     ? tr('prizeDropFinishedAcknowledgeButton')
     : mode === 'prizeWon'
       ? tr('prizeDropWinAcknowledgeButton')
-      : tr('start');
+      : mode === 'active'
+        ? tr('continue')
+        : tr('start');
   $: secondaryButtonLabel = connector.settings?.closePromoOptOut === 'true' ? tr('close') : tr('optOut');
   $: showOptOutButton = mode === 'started' && connector.settings?.hidePromoOptOut !== 'true';
 
@@ -393,7 +395,7 @@
         {/if}
       </div>
 
-      <div class="promo-actions">
+      <div class="promo-actions" class:active-mode={mode === 'active'}>
         {#if showOptOutButton}
           <button
             class="promo-image-button secondary"
@@ -407,11 +409,18 @@
         {/if}
         <button
           class="promo-image-button"
+          class:active-mode={mode === 'active'}
           on:click={handleStart}
         >
-          <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
-          <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
-          <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
+          {#if mode === 'active'}
+            <img class="normal" src={neutralBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={neutralBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={neutralBtnDown} alt="" aria-hidden="true" />
+          {:else}
+            <img class="normal" src={promoGreenBtnNormal} alt="" aria-hidden="true" />
+            <img class="hover" src={promoGreenBtnHover} alt="" aria-hidden="true" />
+            <img class="down" src={promoGreenBtnDown} alt="" aria-hidden="true" />
+          {/if}
           <span class="promo-image-button-label">{primaryButtonLabel}</span>
         </button>
       </div>
@@ -522,14 +531,15 @@ body.dark-theme{--primary-color: #7D4CDB;--background-front: #222222;--backgroun
 .prize-text-small{position:relative;font-family:'Roboto-Bold',sans-serif;font-weight:bolder;display:inline-block;color:#ffffff;-webkit-text-stroke:0.1px #ee141a}
 .promo-qualifying-bet{position:absolute;left:50%;top:356px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
 .promo-prizes-list{position:absolute;left:50%;top:229px;width:300px;max-width:300px;transform:translateX(-50%);border-radius:4px;padding:6px 8px;display:grid;grid-template-columns:1fr 1fr;gap:2px 0px;max-height:95px;overflow-y:auto}
-.promo-prize-item{display:flex;flex-direction:row;justify-content:center;align-items:center;margin-bottom:0;font-size:10px;line-height:1.1;font-family:'Roboto',Arial,sans-serif;font-weight:900;gap:2px;box-sizing:border-box;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.promo-prize-item{display:flex;flex-direction:row;justify-content:center;align-items:center;margin-bottom:0;font-size:10px;line-height:1.1;font-family:'Roboto',Arial,sans-serif;font-weight:900;gap:2px;box-sizing:border-box;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 .promo-prize-item:last-child{margin-bottom:0}
-.promo-prize-left{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center}
-.promo-prize-value{color:#ffffff;-webkit-text-stroke:0.1px #ee141a;text-align:center;font-weight:bold}
+.promo-prize-left{color:#ffffff;text-shadow:0 0 1px #ee141a,1px 1px 1px rgba(0,0,0,0.8);text-align:center}
+.promo-prize-value{color:#ffffff;text-shadow:0 0 1px #ee141a,1px 1px 1px rgba(0,0,0,0.8);text-align:center;font-weight:bold}
 .promo-prize-more{justify-content:center;font-style:italic;color:#ddd}
 .promo-end-date{position:absolute;left:50%;top:368px;width:360px;transform:translateX(-50%);text-align:center;font-size:7px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .promo-terms-link{position:absolute;left:50%;top:380px;transform:translateX(-50%);background:transparent;border:0;color:#fff;text-decoration:underline dotted;cursor:pointer;font-size:7px;font-weight:600;pointer-events:auto}
 .promo-actions{position:absolute;left:50%;right:auto;bottom:37px;display:flex;justify-content:center;gap:4px;padding:0 7px;transform:translateX(-50%);pointer-events:auto}
+.promo-actions.active-mode{bottom:44px}
 .promo-image-button{position:relative;border:0;background:transparent;padding:0;cursor:pointer;min-width:60px;pointer-events:auto;width:60px;height:auto}
 .promo-image-button img{display:block;width:60px;height:auto;user-select:none;pointer-events:none}
 .promo-image-button img.hover{display:none}
